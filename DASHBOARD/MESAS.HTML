@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepción - Mesas</title>
+    <link rel="stylesheet" href="CSS/MESAS.CSS">
+    <link rel="icon" type="image/png" href="IMAGES/CERVEZIN.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<!-- Botón para cambiar contraseña -->
+<div style="margin: 20px 0; text-align: center;">
+    <a href="PHP/PASSWORD.PHP" class="btn btn-primary">
+        <i class="fas fa-key"></i> Cambiar Mi Contraseña
+    </a>
+</div>
+
+<body>
+    <div class="recepcion-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Recepción</h1>
+                <p class="subtitle">Gestión de Mesas</p>
+            </div>
+
+            <div class="header-right">
+                <img src="IMAGES/CERVEZIN.png" alt="Logo Restaurante" class="header-logo">
+            </div>
+        </div>
+
+        <!-- Contador de Mesas -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chair"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number" id="total-mesas">12</span>
+                    <span class="stat-label">Total Mesas</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon disponible">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number" id="mesas-disponibles">12</span>
+                    <span class="stat-label">Disponibles</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon ocupada">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number" id="mesas-ocupadas">0</span>
+                    <span class="stat-label">Ocupadas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Mesas -->
+        <div class="mesas-container">
+            <div class="mesas-grid" id="mesas-grid">
+                <!-- Las mesas se generarán dinámicamente con JavaScript -->
+            </div>
+        </div>
+
+        <!-- Panel de Control -->
+        <div class="control-panel">
+            <h3>Acciones Rápidas</h3>
+            <div class="control-buttons">
+                <button class="btn btn-secondary" onclick="liberarTodasMesas()">
+                    <i class="fas fa-sync-alt"></i> Liberar Todas las Mesas
+                </button>
+                <button class="btn btn-primary" onclick="ocuparTodasMesas()">
+                    <i class="fas fa-utensils"></i> Ocupar Todas las Mesas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar ocupación -->
+    <div id="modalOcupar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-utensils"></i> Ocupar Mesa</h3>
+                <span class="close" onclick="cerrarModalOcupar()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="textoConfirmacionOcupar">¿Está seguro que desea marcar la mesa como ocupada?</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-danger" onclick="confirmarOcuparMesa()">
+                        <i class="fas fa-check"></i> Sí, Ocupar Mesa
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalOcupar()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar liberación -->
+    <div id="modalLiberar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chair"></i> Liberar Mesa</h3>
+                <span class="close" onclick="cerrarModalLiberar()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="textoConfirmacionLiberar">¿Está seguro que desea liberar la mesa?</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-success" onclick="confirmarLiberarMesa()">
+                        <i class="fas fa-check"></i> Sí, Liberar Mesa
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalLiberar()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="JAVA/MESAS.JS"></script>
+</body>
+
+</html>

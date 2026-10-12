@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas - Pizzería</title>
+    <link rel="stylesheet" href="CSS/FILTRO.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="CSS/FILTRO.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Sistema de Ventas</h1>
+            <div class="current-time" id="current-time"></div>
+        </header>
+
+        <div class="main-content">
+            <!-- Panel de categorías -->
+            <div class="categories-panel">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-category="pizzas">Pizzas</button>
+                    <button class="tab-btn" data-category="hamburguesas">Hamburguesas</button>
+                    <button class="tab-btn" data-category="bebidas">Bebidas</button>
+                    <button class="tab-btn" data-category="cafes">Cafés</button>
+                    <button class="tab-btn" data-category="frapes">Frapés</button>
+                    <button class="tab-btn" data-category="mezcales">Mezcales</button>
+                    <button class="tab-btn" data-category="micheladas">Micheladas</button>
+                    <button class="tab-btn" data-category="postres">Postres</button>
+                    <button class="tab-btn" data-category="extras">Extras</button>
+                </div>
+                
+                <!-- Contenedor de productos -->
+                <div class="products-container" id="products-container"></div>
+            </div>
+
+            <!-- Panel de venta -->
+            <div class="sale-panel">
+                <div class="client-info">
+                    <h3>Información del Cliente</h3>
+                    <input type="text" id="client-name" placeholder="Nombre del cliente">
+                    <input type="tel" id="client-phone" placeholder="Teléfono">
+                    <input type="text" id="client-address" placeholder="Dirección (opcional)">
+                </div>
+
+                <div class="sale-items-container">
+                    <h3>Productos en la venta</h3>
+                    <div class="sale-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sale-items">
+                                <!-- Los productos se agregarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pizza-options" style="display: none;">
+    <div class="specialties-section">
+        <h3>Especialidades</h3>
+        <div id="specialties-container"></div>
+    </div>
+    <div class="ingredients-section">
+        <h3>Ingredientes Extra</h3>
+        <div id="ingredients-container"></div>
+    </div>
+</div>
+
+                <div class="totals-section">
+                    <div class="totals-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="totals-row">
+                        <span>IVA (0%):</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    <div class="totals-row total">
+                        <span>Total:</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="payment-section">
+                    <h3>Método de pago</h3>
+                    <div class="payment-options">
+                        <label>
+                            <input type="radio" name="payment" value="efectivo" checked>
+                            <span>Efectivo</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="payment" value="tarjeta">
+                            <span>Tarjeta</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="payment" value="transferencia">
+                            <span>Transferencia</span>
+                        </label>
+                    </div>
+
+                    <div class="cash-section" id="cash-section">
+                        <div class="cash-input">
+                            <label for="cash-received">Efectivo recibido:</label>
+                            <input type="number" id="cash-received" min="0" step="0.01">
+                        </div>
+                        <div class="cash-change" id="cash-change">Cambio: $0.00</div>
+                    </div>
+                </div>
+
+                <div class="sale-buttons">
+                    <button id="cancel-sale" class="btn cancel-btn">
+                        <i class="fas fa-times"></i> Cancelar Venta
+                    </button>
+                    <button id="complete-sale" class="btn complete-btn">
+                        <i class="fas fa-check"></i> Registrar Venta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para personalizar producto -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="product-modal-title">Personalizar Producto</h2>
+            
+            <div class="product-image-container">
+                <img id="modal-product-image" src="" alt="Producto">
+            </div>
+            
+            <div class="product-options">
+                <div class="notes-section">
+                    <label for="product-notes">Notas especiales:</label>
+                    <textarea id="product-notes" placeholder="Ej. Sin mayonesa, bien cocida, etc."></textarea>
+                </div>
+                
+                <div class="special-price-section">
+                    <label for="special-price">Precio especial (opcional):</label>
+                    <input type="number" id="special-price" min="0" step="0.01" placeholder="Dejar vacío para precio normal">
+                </div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button id="cancel-product" class="btn cancel-btn">Cancelar</button>
+                <button id="confirm-product" class="btn confirm-btn">Agregar a la venta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para el ticket -->
+    <div class="modal" id="ticket-modal">
+        <div class="modal-content ticket-content">
+            <span class="close-btn">&times;</span>
+            <h2>Ticket de Venta</h2>
+            <div id="ticket-content"></div>
+            <button id="print-ticket" class="btn print-btn">
+                <i class="fas fa-print"></i> Imprimir Ticket
+            </button>
+        </div>
+    </div>
+
+    <script src="JAVA/FILTRO.js"></script>
+</body>
+</html>

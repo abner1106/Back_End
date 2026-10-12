@@ -1,0 +1,269 @@
+<?php
+session_start();
+if (!isset($_SESSION['empleado_id'])) {
+    header("Location: ../LOGIN/index.php");
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzería Miches - Ventas</title>
+    <link rel="stylesheet" href="CSS/CSS_MENUVENTAS.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="IMAGES/CERVEZIN.png" />
+
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>Pizzería Miches</h1>
+                <div class="logo-wrapper">
+                    <img id="cervezin" src="IMAGES/CERVEZIN.png" alt="Logo Miches" class="logo-rustico">
+                </div>
+                <p>Sistema de Ventas</p>
+            </div>
+        </header>
+
+
+
+        <div style="margin: 20px 0; text-align: center;">
+            <a href="PHP/PASSWORD.PHP" class="btn btn-primary" style="text-decoration: none;">
+                <i class="fas fa-key"></i> Cambiar Mi Contraseña
+            </a>
+        </div>
+
+        <div style="margin: 20px 0; text-align: center;">
+            <a href="HISTORIAL_VENTAS_EMPLEADO.HTML" class="btn btn-primary" style="text-decoration: none;">
+                <i class="fas fa-key"></i> Historial de Ventas
+            </a>
+        </div>
+
+
+        <section class="sales-container">
+            <div class="product-selection">
+                <div class="form-group">
+                    <label for="category">Categoría:</label>
+                    <select id="category" class="form-control">
+                        <option value="">Seleccione categoría</option>
+                        <option value="pizzas">Pizzas</option>
+                        <option value="hamburguesas">Hamburguesas</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="azulitos">azulitos</option>
+                        <option value="DinoDrinks">DinoDrinks</option>
+                        <option value="extras">Extras</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="product">Producto:</label>
+                    <select id="product" class="form-control" disabled>
+                        <option value="">Seleccione producto</option>
+                    </select>
+                </div>
+
+                <!-- Selector de tamaño para pizzas -->
+                <div id="size-group" class="form-group" style="display: none;">
+                    <label for="sizes">Tamaño:</label>
+                    <select id="sizes" class="form-control">
+                        <option value="">Seleccione tamaño</option>
+                        <option value="grande">Grande (+$280)</option>
+                        <option value="mediana">Mediana (+$210)</option>
+                        <option value="familiar">Familiar (+$390)</option>
+                        <option value="chica">Chica (+$180)</option>
+                        <option value="cuadrada">Cuadrada (+$350)</option>
+                    </select>
+                </div>
+
+                <!-- Selector de especialidades para pizzas con recargos -->
+                <div id="specialty-group" class="form-group" style="display: none;">
+                    <label>Especialidades (puedes seleccionar segun el tamaño de 1 a 4 ingredientes):</label>
+                    <div class="specialty-options">
+                        <div class="form-check">
+                            <input class="form-check-input specialty-checkbox" type="checkbox" id="mexicana"
+                                value="Pizza Mexicana" data-price="20">
+                            <label class="form-check-label" for="mexicana">Mexicana (+$20)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input specialty-checkbox" type="checkbox" id="hawaiana"
+                                value="Pizza Hawaiana" data-price="15">
+                            <label class="form-check-label" for="hawaiana">Hawaiana (+$15)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input specialty-checkbox" type="checkbox" id="cuatro-quesos"
+                                value="Pizza Cuatro Quesos" data-price="25">
+                            <label class="form-check-label" for="cuatro-quesos">Cuatro Quesos (+$25)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input specialty-checkbox" type="checkbox" id="pepperoni"
+                                value="Pizza Pepperoni" data-price="10">
+                            <label class="form-check-label" for="pepperoni">Pepperoni (+$10)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input specialty-checkbox" type="checkbox" id="vegetariana"
+                                value="Pizza Vegetariana" data-price="18">
+                            <label class="form-check-label" for="vegetariana">Vegetariana (+$18)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input specialty-checkbox" type="checkbox" id="carnes"
+                                value="Pizza Carnes" data-price="22">
+                            <label class="form-check-label" for="carnes">Carnes (+$22)</label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selected-specialties" name="specialties">
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Precio:</label>
+                    <input type="text" id="price" class="form-control" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Cantidad:</label>
+                    <input type="number" id="quantity" class="form-control" min="1" value="1">
+                </div>
+                <!-- Ingredientes extras para pizzas -->
+                <div id="ingredient-group" class="form-group" style="display: none;">
+                    <label>Ingredientes extras:</label>
+                    <div class="ingredient-options">
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="pepperoni"
+                                value="pepperoni" data-price="15">
+                            <label class="form-check-label" for="pepperoni">Pepperoni (+$15)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="jamon" value="jamon"
+                                data-price="12">
+                            <label class="form-check-label" for="jamon">Jamón (+$12)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="champiñones"
+                                value="champiñones" data-price="10">
+                            <label class="form-check-label" for="champiñones">Champiñones (+$10)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="pimientos"
+                                value="pimientos" data-price="8">
+                            <label class="form-check-label" for="pimientos">Pimientos (+$8)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="cebolla"
+                                value="cebolla" data-price="8">
+                            <label class="form-check-label" for="cebolla">Cebolla (+$8)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="aceitunas"
+                                value="aceitunas" data-price="10">
+                            <label class="form-check-label" for="aceitunas">Aceitunas (+$10)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="piña" value="piña"
+                                data-price="12">
+                            <label class="form-check-label" for="piña">Piña (+$12)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="carne" value="carne"
+                                data-price="18">
+                            <label class="form-check-label" for="carne">Carne (+$18)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input ingredient-checkbox" type="checkbox" id="tocino"
+                                value="tocino" data-price="15">
+                            <label class="form-check-label" for="tocino">Tocino (+$15)</label>
+                        </div>
+                    </div>
+                    <small id="ingredients-help" class="form-text text-muted">Seleccione ingredientes extras</small>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="special-price">Precio especial (opcional):</label>
+                    <input type="number" id="special-price" class="form-control" min="0" step="0.01">
+                </div>
+
+                <div class="form-group">
+                    <label for="special-requests">Peticiones especiales:</label>
+                    <textarea id="special-requests" class="form-control" rows="2"
+                        placeholder="Ej: Sin mayonesa, poco queso, bien cocida, etc."></textarea>
+                </div>
+
+                <button id="add-product" class="btn primary">Agregar Producto</button>
+            </div>
+
+            <div class="product-image">
+                <img id="product-img" src="IMAGES/MICHE.jpg" alt="Imagen del producto">
+            </div>
+        </section>
+
+        <section class="sales-table-container">
+            <table class="sales-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-table-body">
+                    <!-- Productos se agregan dinámicamente -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="total-label">Total:</td>
+                        <td id="total-amount" class="total-amount">$0.00</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+        <div class="payment-method">
+            <h3>Método de Pago</h3>
+            <div class="form-group">
+                <label>
+                    <input type="radio" name="payment-method" value="efectivo" checked> Efectivo
+                </label>
+                <label>
+                    <input type="radio" name="payment-method" value="transferencia"> Transferencia Bancaria
+                </label>
+            </div>
+            <div id="cash-container" class="form-group">
+                <label for="cash-received">Efectivo Recibido:</label>
+                <input type="number" id="cash-received" class="form-control" min="0" step="0.01">
+                <p id="cash-change" class="cash-change">Cambio: $0.00</p>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="clear-sale" class="btn danger">Limpiar Venta</button>
+            <button id="complete-sale" class="btn success">Realizar Venta</button>
+        </div>
+        </main>
+    </div>
+
+    <!-- Modal para el ticket -->
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="ticket-content" class="ticket-content">
+                <!-- Contenido del ticket -->
+            </div>
+            <button id="print-ticket" class="btn print">Imprimir Ticket</button>
+        </div>
+    </div>
+
+    <script src="JAVA/VENTA_BUILDER.js"></script>
+    <script src="JAVA/MENU_VENTAS.js"></script>
+
+</body>
+
+</html>

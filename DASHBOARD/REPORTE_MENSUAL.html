@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Ventas - Pizzería Napoli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/REPORTE_MES.css">
+    <link rel="icon" type="image/x-icon" href="images/CERVEZIN.png">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <img src="images/CERVEZIN.png" alt="Logo Pizzería" class="logo">
+                <div class="logo-shadow"></div>
+            </div>
+            <h1>Reportes de Ventas</h1>
+            <div class="fecha-hora" id="fecha-hora"></div>
+        </header>
+
+        <div class="filtros-container">
+            <div class="filtros">
+                <div class="filtro-group">
+                    <label for="tipo-reporte"><i class="fas fa-filter"></i> Tipo de Reporte:</label>
+                    <select id="tipo-reporte" class="form-control">
+                        <option value="dia">Día</option>
+                        <option value="semana">Semana</option>
+                        <option value="mes">Mes</option>
+                        <option value="personalizado">Personalizado</option>
+                    </select>
+                </div>
+
+                <div class="filtro-group" id="filtro-dia">
+                    <label for="fecha-dia"><i class="far fa-calendar-alt"></i> Seleccionar Día:</label>
+                    <input type="date" id="fecha-dia" class="form-control">
+                </div>
+
+                <div class="filtro-group" id="filtro-semana" style="display: none;">
+                    <label for="fecha-semana"><i class="far fa-calendar-week"></i> Semana que inicia (Lunes):</label>
+                    <input type="date" id="fecha-semana" class="form-control">
+                </div>
+
+                <div class="filtro-group" id="filtro-mes" style="display: none;">
+                    <label for="fecha-mes"><i class="far fa-calendar"></i> Mes:</label>
+                    <input type="month" id="fecha-mes" class="form-control">
+                </div>
+
+                <div class="filtro-group" id="filtro-personalizado" style="display: none;">
+                    <label for="fecha-inicio"><i class="fas fa-calendar-day"></i> Rango de fechas:</label>
+                    <div class="rango-fechas">
+                        <input type="date" id="fecha-inicio" class="form-control">
+                        <span>a</span>
+                        <input type="date" id="fecha-fin" class="form-control">
+                    </div>
+                </div>
+
+                <button id="generar-reporte" class="btn btn-primary pulse">
+                    <i class="fas fa-chart-bar"></i> Generar Reporte
+                </button>
+            </div>
+        </div>
+
+        <div class="resumen-ventas">
+            <div class="resumen-box slide-in">
+                <h3><i class="fas fa-money-bill-wave"></i> Efectivo</h3>
+                <p class="monto" id="efectivo">$0.00</p>
+            </div>
+            <div class="resumen-box slide-in" style="animation-delay: 0.1s;">
+                <h3><i class="fas fa-credit-card"></i> Tarjetas</h3>
+                <p class="monto" id="tarjetas">$0.00</p>
+            </div>
+            <div class="resumen-box slide-in" style="animation-delay: 0.2s;">
+                <h3><i class="fas fa-exchange-alt"></i> Transferencias</h3>
+                <p class="monto" id="transferencias">$0.00</p>
+            </div>
+            <div class="resumen-box total slide-in" style="animation-delay: 0.3s;">
+                <h3><i class="fas fa-calculator"></i> Total</h3>
+                <p class="monto" id="total-dia">$0.00</p>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-cash-register"></i> Efectivo en Caja</h2>
+                <div class="efectivo-container">
+                    <p class="monto-grande" id="efectivo-caja">$0.00</p>
+                    <div class="efectivo-shadow"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-receipt"></i> Detalle de Ventas</h2>
+                <button id="imprimir-pdf" class="btn btn-primary">
+                    <i class="fas fa-file-pdf"></i> Exportar a PDF
+                </button>
+            </div>
+            <div class="table-container">
+                <table id="tabla-ventas">
+                    <thead>
+                        <tr>
+                            <th>HORA</th>
+                            <th>PRODUCTO</th>
+                            <th>CANTIDAD</th>
+                            <th>P. UNITARIO</th>
+                            <th>TOTAL</th>
+                            <th>MÉTODO PAGO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Datos dinámicos -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-list-alt"></i> Historial de Retiros</h2>
+            <div class="table-container">
+                <table id="tabla-retiros">
+                    <thead>
+                        <tr>
+                            <th>FECHA/HORA</th>
+                            <th>MOTIVO</th>
+                            <th>MONTO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Datos dinámicos -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="JAVA/REPORTE_MES.js"></script>
+    <scipt src="../JAVA_SCRIPT/ANIMATION.JS"></scipt>
+
+</body>
+
+</html>

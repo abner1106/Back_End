@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Corte de Ventas - Pizzería Napoli</title>
+    <link rel="stylesheet" href="CSS/VENTAS_dIA.css" />
+    <link rel="icon" type="image/x-icon" href="IMAGES/CERVEZIN.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<!-- Botón para cambiar contraseña -->
+<div style="margin: 20px 0; text-align: center;">
+    <a href="PHP/PASSWORD.PHP" class="btn btn-primary" style="text-decoration: none;">
+        <i class="fas fa-key"></i> Cambiar Mi Contraseña
+    </a>
+</div>
+
+
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="IMAGES/CERVEZIN.png" alt="Logo Pizzería" class="logo" />
+            <h1>Corte de Ventas</h1>
+            <div class="fecha-hora" id="fecha-hora"></div>
+        </header>
+        <div class="bienvenida-admin" id="bienvenida-admin"></div>
+
+        <div class="acciones">
+            <button id="ver-historial" class="btn">
+                <i class="fas fa-history"></i> Ver Historial De Todas las ventas
+            </button>
+            <button id="imprimir-pdf" class="btn btn-primary">
+                <i class="fas fa-file-pdf"></i> Imprimir Corte PDF
+            </button>
+            <button id="ver-balance" class="btn">
+                <i class="fas fa-history"></i> Balance de ventas
+            </button>
+            <button id="Administracion-empleados" class="btn">
+                <i class="fas fa-history"></i> Administración de empleados
+            </button>
+
+
+        </div>
+
+        <div class="resumen-ventas">
+            <div class="resumen-box">
+                <h3>Efectivo</h3>
+                <p class="monto" id="efectivo">$0.00</p>
+            </div>
+            <div class="resumen-box">
+                <h3>Tarjetas</h3>
+                <p class="monto" id="tarjetas">$0.00</p>
+            </div>
+            <div class="resumen-box">
+                <h3>Transferencias</h3>
+                <p class="monto" id="transferencias">$0.00</p>
+            </div>
+            <div class="resumen-box total">
+                <h3>Total del Día</h3>
+                <p class="monto" id="total-dia">$0.00</p>
+            </div>
+        </div>
+
+        <section class="section">
+            <h2><i class="fas fa-money-bill-wave"></i> Retiro de Efectivo</h2>
+            <form id="form-retiro">
+                <div class="form-group">
+                    <label for="motivo">Motivo del retiro:</label>
+                    <select id="motivo" class="form-control">
+                        <option value="pago_empleado">Pago de empleado</option>
+                        <option value="compra_insumos">Compra de insumos</option>
+                        <option value="gasto_operativo">Gasto operativo</option>
+                        <option value="otro">Otro (especificar)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="otro-motivo-container" style="display: none;">
+                    <label for="otro-motivo">Especificar motivo:</label>
+                    <input type="text" id="otro-motivo" class="form-control"
+                        placeholder="Describa el motivo del retiro">
+                </div>
+
+                <div class="form-group">
+                    <label for="monto">Monto a retirar:</label>
+                    <div class="input-with-symbol">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="monto" class="form-control" min="0" step="0.01" value="0.00" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-warning">
+                    <i class="fas fa-hand-holding-usd"></i> Realizar Retiro
+                </button>
+            </form>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-cash-register"></i> Efectivo en Caja</h2>
+            <p class="monto-grande" id="efectivo-caja">$0.00</p>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-list-alt"></i> Historial de Retiros</h2>
+            <div class="table-container">
+                <table id="tabla-retiros">
+                    <thead>
+                        <tr>
+                            <th>FECHA/HORA</th>
+                            <th>MOTIVO</th>
+                            <th>MONTO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Datos dinámicos -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-receipt"></i> Detalle de Ventas</h2>
+            <div class="table-container">
+                <table id="tabla-ventas">
+                    <thead>
+                        <tr>
+                            <th>HORA</th>
+                            <th>PRODUCTO</th>
+                            <th>CANTIDAD</th>
+                            <th>P. UNITARIO</th>
+                            <th>TOTAL</th>
+                            <th>MÉTODO PAGO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Datos dinámicos -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="JAVA/CORTE_VENTAS_DIA.js"></script>
+</body>
+
+</html>
+<script>
+    document.getElementById("ver-historial").addEventListener("click", function () {
+        window.location.href = "REPORTE_MENSUAL.html";
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("ver-balance").addEventListener("click", function () {
+            window.location.href = "PRODUCTOS.html";
+        });
+    });
+</script>
+
+<script>
+    document.getElementById("Administracion-empleados").addEventListener("click", function () {
+        window.location.href = "PHP/CONTROL_EMPLEADOS.PHP";
+    });
+</script>

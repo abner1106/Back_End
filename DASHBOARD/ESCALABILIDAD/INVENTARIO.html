@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Restaurante</title>
+    <link rel="stylesheet" href="CSS/INVENTARIO.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="icon"type ="image/x-icon" href="IMAGES/LOGOC.PNG"/>
+
+</head>
+<body>
+    <header>
+        <div class="header-image"></div>
+        <div class="logo-container">
+            <img src="IMAGES/LOGOC.png" alt="Logo del Restaurante" class="logo">
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Filtros</h2>
+            <div class="filter-group">
+                <button class="filter-btn active" data-category="all">Todos</button>
+                <button class="filter-btn" data-category="verduras">🥦 Verduras</button>
+                <button class="filter-btn" data-category="frutas">🍓 Frutas</button>
+                <button class="filter-btn" data-category="lacteos">🧀 Lácteos</button>
+                <button class="filter-btn" data-category="carnes">🍖 Carnes</button>
+                <button class="filter-btn" data-category="insumos">🧂 Insumos</button>
+                <button class="filter-btn" data-category="limpieza">✨ Limpieza</button>
+                <button class="filter-btn" data-category="bebidas">🥤 Bebidas</button>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Buscar producto...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="category-title">
+                <h1>Stock Actual</h1>
+                <div class="category-indicator"></div>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Bebidas -->
+               <div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/FRAPEOREO.png" alt="Frapé de Oreo" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Frapé de Oreo</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/CARAMEL.png" alt="Smuttis Caramel" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Smuttis Caramel</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/CHOCOMILK.png" alt="Chocomilk" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Chocomilk</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/COCA.png" alt="Coca-Cola 3L" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Coca-Cola 3L</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/LIMONADAMINERAL.png" alt="Limonada Mineral" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Limonada Mineral</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/BOTELLAAGUA.png" alt="Agua Natural" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Agua Natural (Botella)</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/SIDRAL.png" alt="Sidral Mundet 600ml" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Sidral Mundet 600ml</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/JAMAICA.png" alt="Agua de Jamaica" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Agua de Jamaica</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+<div class="product-card" data-category="bebidas">
+    <div class="product-img-container">
+        <img src="IMAGES/BEBIDAS/HORCHATA.png" alt="Agua de Horchata" class="product-img">
+    </div>
+    <div class="product-info">
+        <h3>Agua de Horchata</h3>
+        <p class="stock">Stock: <span>0</span></p>
+        <p class="category">Bebidas</p>
+    </div>
+</div>
+
+                
+
+                <!-- Ejemplo de verduras -->
+                <div class="product-card" data-category="verduras">
+                    <div class="product-img-container">
+                        <img src="IMAGES/ALIMENTOS/TOMATES.jpg" alt="tomate" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Tomates</h3>
+                        <p class="stock">Stock: <span>5 kg</span></p>
+                        <p class="category">Verduras</p>
+                    </div>
+                </div>
+
+                <!-- Ejemplo de frutas -->
+                <div class="product-card" data-category="frutas">
+                    <div class="product-img-container">
+                        <img src="IMAGES/ALIMENTOS/LIMON.jpg" alt="Limones" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Limones</h3>
+                        <p class="stock">Stock: <span>3 kg</span></p>
+                        <p class="category">Frutas</p>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="frutas">
+                    <div class="product-img-container">
+                        <img src="IMAGES/ALIMENTOS/FRESAS.png" alt="Fresas" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Fresas</h3>
+                        <p class="stock">Stock: <span>3 kg</span></p>
+                        <p class="category">Frutas</p>
+                    </div>
+                </div>
+
+                <!-- Ejemplo de lácteos -->
+                <div class="product-card" data-category="lacteos">
+                    <div class="product-img-container">
+                        <img src="IMAGES/ALIMENTOS/LECHE_DESLACTOSADA.png" alt="Queso Cheddar" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>Queso Cheddar</h3>
+                        <p class="stock">Stock: <span>4 kg</span></p>
+                        <p class="category">Lácteos</p>
+                    </div>
+                </div>
+
+                <!-- Más productos pueden ser añadidos aquí -->
+            </div>
+
+
+
+            
+        </main>
+    </div>
+
+    <script src="JAVA/INVENTARIO.js"></script>
+</body>
+</html>

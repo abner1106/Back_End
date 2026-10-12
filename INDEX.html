@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las Miches</title>
+    <link rel="stylesheet" href="CSS/INDEX.css">
+    <link rel="icon" type="image/png" sizes="64x64" href="IMAGES/pizza.ico">
+
+</head>
+
+<body>
+    <header class="hero">
+        <div class="hero-content" style="position: relative;">
+            <img src="IMAGES/CERVEZIN.png" alt="LAS Miches" class="logo" id="cervezin">
+
+            <!-- ⚽ BALÓN MUNDIALISTA AQUÍ -->
+            <img src="IMAGES/balonf2.png" id="balon"
+                style="position:absolute; width:45px; left:55%; top:120px; opacity:0;">
+
+            <h1>Restaurant Bar las Miches</h1>
+            <p class="slogan">Pizza y Micheladas</p>
+        </div>
+    </header>
+
+    <!-- Access Section -->
+    <section class="access-section">
+        <div class="zapotec-border"></div>
+
+        <div class="access-cards">
+            <div class="access-card" onclick="window.location.href='PHP/LOGIN_AD.PHP'">
+                <div class="icon-container">
+                    <img src="IMAGES/AMIN.png" alt="Administrador" class="custom-icon">
+                </div>
+                <h2>Administrador</h2>
+                <p>Acceso al sistema de gestión</p>
+                <div class="mezcal-decoration"></div>
+            </div>
+
+            <div class="access-card" onclick="window.location.href='PHP/LOGIN_EMP.PHP'">
+                <div class="icon-container">
+                    <img src="IMAGES/empleado.png" alt="Empleado" class="custom-icon">
+                </div>
+                <h2>Empleado</h2>
+                <p>Acceso al sistema de ventas</p>
+                <div class="mezcal-decoration"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Pizzeria Miches - Todos los derechos reservados codemonkey's 951 114 35 41</p>
+
+    </footer>
+</body>
+<script src="JAVA_SCRIPT/ANIMATION.JS"></script>
+<script src="JAVA_SCRIPT/JAVA_INDEX.js"></script>
+
+
+</html>

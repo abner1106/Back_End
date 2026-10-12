@@ -1,0 +1,489 @@
+:root {
+    --primary: #A52A2A;
+    /* Deep Terracotta */
+    --secondary: #8B4513;
+    /* Rich Saddle Brown */
+    --accent: #FFD700;
+    /* Muted Gold/Ochre */
+    --dark: #2F4F4F;
+    /* Dark Slate Gray/Teal */
+    --light: #FAF0E6;
+    /* Linen/Off-White */
+    --text: #333333;
+    /* Dark Charcoal Gray */
+    --white: #FFFFFF;
+    /* Pure White */
+    --danger: #C0392B;
+    /* Muted Red */
+    --success: #690a0a;
+    /* Natural Green */
+    --warning: #E67E22;
+    /* Deep Orange */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fcb69f;
+    color: var(--dark);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 30px 20px 20px;
+    border-bottom: 2px solid var(--secondary);
+    position: relative;
+    background-color: var(--white);
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    border-radius: 50%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+    border: 3px solid var(--secondary);
+}
+
+.logo:hover {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.header h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+}
+
+.fecha-hora {
+    font-size: 1rem;
+    color: var(--gray);
+    background-color: var(--white);
+    padding: 8px 15px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* Botones */
+.acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 0 var(--primary-light);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--primary-light);
+}
+
+.btn-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--primary-light);
+}
+
+#ver-historial {
+    background-color: var(--info);
+    color: white;
+}
+
+#ver-historial:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+}
+
+/* Resumen de Ventas */
+.resumen-ventas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.resumen-box {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: var(--transition);
+    border-top: 4px solid var(--secondary);
+}
+
+.resumen-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.resumen-box h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.resumen-box .monto {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.resumen-box.total {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+}
+
+.resumen-box.total h3,
+.resumen-box.total .monto {
+    color: #770e0e;
+}
+
+/* Secciones */
+.section {
+    background-color: var(--white);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.section h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--secondary);
+}
+
+.section h2 i {
+    margin-right: 10px;
+    color: var(--primary);
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.25);
+}
+
+.btn-warning {
+    background-color: var(--warning);
+    color: var(--dark);
+    font-weight: 600;
+    width: 34%;
+    padding: 12px;
+    margin-top: 10px;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+}
+
+/* Monto grande */
+.monto-grande {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--success);
+    text-align: center;
+    margin: 20px 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Estilo para el contenedor de input con símbolo de moneda */
+.input-with-symbol {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol {
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+    color: var(--primary);
+    z-index: 1;
+}
+
+#monto {
+    padding-left: 30px;
+}
+
+/* Tablas */
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+th {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+}
+
+tr:nth-child(even) {
+    background-color: var(--gray-light);
+}
+
+tr:hover {
+    background-color: rgba(139, 69, 19, 0.1);
+}
+
+/* Estilo para la tabla de historial */
+#tabla-retiros {
+    width: 100%;
+}
+
+#tabla-retiros th:nth-child(1) {
+    width: 20%;
+}
+
+#tabla-retiros th:nth-child(2) {
+    width: 50%;
+}
+
+#tabla-retiros th:nth-child(3) {
+    width: 30%;
+    text-align: right;
+}
+
+#tabla-retiros td:nth-child(3) {
+    text-align: right;
+    font-weight: 600;
+    color: var(--danger);
+}
+
+/* Estilo para la tabla de ventas */
+#tabla-ventas th:nth-child(1) {
+    width: 10%;
+}
+
+#tabla-ventas th:nth-child(2) {
+    width: 30%;
+}
+
+#tabla-ventas th:nth-child(3),
+#tabla-ventas th:nth-child(4),
+#tabla-ventas th:nth-child(5) {
+    width: 15%;
+    text-align: right;
+}
+
+#tabla-ventas th:nth-child(6) {
+    width: 15%;
+}
+
+#tabla-ventas td:nth-child(3),
+#tabla-ventas td:nth-child(4),
+#tabla-ventas td:nth-child(5) {
+    text-align: right;
+}
+
+#tabla-ventas td:nth-child(5) {
+    font-weight: 600;
+    color: var(--success);
+}
+
+/* Animación para nuevos registros */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#tabla-retiros tbody tr,
+#tabla-ventas tbody tr {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .resumen-ventas {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .section {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .resumen-ventas {
+        grid-template-columns: 1fr;
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+    }
+
+    .monto-grande {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 0;
+    }
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background: linear-gradient(135deg, #272c27, #920303);
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(135deg, #bd0303, #db0d0d);
+}
+
+.btn i {
+    font-size: 18px;
+}

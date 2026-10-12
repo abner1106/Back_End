@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Digital Completo</title>
+    <link rel="stylesheet" href="CSS/MENU_DIGITAL.css">
+    <link rel="icon"type ="image/x-icon" href="IMAGES/LOGOC.PNG"/>
+</head>
+<body>
+    <div class="header">
+        <h1>Menú Digital</h1>
+    </div>
+
+    <div class="category-buttons">
+        <button class="category-btn active" data-category="pizzas">Pizzas</button>
+        <button class="category-btn" data-category="hamburguesas">Hamburguesas</button>
+        <button class="category-btn" data-category="bebidas">Bebidas</button>
+        <button class="category-btn" data-category="extras">Extras</button>
+        <button class="category-btn" data-category="postres">Postres</button>
+        <button class="category-btn" data-category="especialidades">Especialidades Pizza</button>
+
+    </div>
+
+    <div class="menu-container">
+        <!-- Pizzas -->
+        <div class="category-content active" id="pizzas">
+            <div class="product-grid">
+                <!-- Pizzas 2x1 -->
+                <div class="product-card combo">
+                    <img src="IMAGES/ALIMENTOS/GRANDE.PNG" alt="Pizza Grande 2x1">
+                    <h3>Pizza Grande 2x1</h3>
+                    <p class="price">$280.00</p>
+                    <p class="description">Combo con hasta 4 especialidades</p>
+                    <span class="combo-tag">COMBO</span>
+                </div>
+                <div class="product-card combo">
+                    <img src="IMAGES/ALIMENTOS/MEDIANA.PNG" alt="Pizza Mediana 2x1">
+                    <h3>Pizza Mediana 2x1</h3>
+                    <p class="price">$210.00</p>
+                    <p class="description">Combo con hasta 4 especialidades</p>
+                    <span class="combo-tag">COMBO</span>
+                </div>
+                <div class="product-card combo">
+                    <img src="IMAGES/ALIMENTOS/FAMILIAR.PNG" alt="Pizza Familiar 2x1">
+                    <h3>Pizza Familiar 2x1</h3>
+                    <p class="price">$390.00</p>
+                    <p class="description">Combo con hasta 4 especialidades</p>
+                    <span class="combo-tag">COMBO</span>
+                </div>
+                <div class="product-card combo">
+                    <img src="IMAGES/ALIMENTOS/CHICO.PNG" alt="Pizza Chica 2x1">
+                    <h3>Pizza Chica 2x1</h3>
+                    <p class="price">$180.00</p>
+                    <p class="description">Combo con hasta 4 especialidades</p>
+                    <span class="combo-tag">COMBO</span>
+                </div>
+
+                <!-- Pizzas individuales -->
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/GRANDE.PNG" alt="Pizza Grande Sola">
+                    <h3>Pizza Grande Sola</h3>
+                    <p class="price">$140.00</p>
+                    <p class="description">Hasta 2 especialidades</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/CHICO.PNG" alt="Pizza Chica Sola">
+                    <h3>Pizza Chica Sola</h3>
+                    <p class="price">$100.00</p>
+                    <p class="description">Hasta 1 especialidad</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/MEDIANA.PNG" alt="Pizza Mediana Sola">
+                    <h3>Pizza Mediana Sola</h3>
+                    <p class="price">$120.00</p>
+                    <p class="description">Hasta 2 especialidades</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/FAMILIAR.PNG" alt="Pizza Familiar Sola">
+                    <h3>Pizza Familiar Sola</h3>
+                    <p class="price">$120.00</p>
+                    <p class="description">Hasta 2 especialidades</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/CUADRADA.PNG" alt="Pizza Cuadrada">
+                    <h3>Pizza Cuadrada</h3>
+                    <p class="price">$350.00</p>
+                    <p class="description">Hasta 4 especialidades</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hamburguesas -->
+        <div class="category-content" id="hamburguesas">
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/HAWAIANA.AVIF" alt="Hamburguesa Hawaiana">
+                    <h3>Hamburguesa Hawaiana</h3>
+                    <p class="price">$90.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/DOBLE.jpg" alt="Hamburguesa Doble Carne">
+                    <h3>Hamburguesa Doble Carne</h3>
+                    <p class="price">$100.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/SENCILLA.jpg" alt="Hamburguesa Sencilla">
+                    <h3>Hamburguesa Sencilla</h3>
+                    <p class="price">$70.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/LUJO.jpg" alt="Hamburguesa de Lujo">
+                    <h3>Hamburguesa de Lujo</h3>
+                    <p class="price">$120.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/POLLO.jpg" alt="Hamburguesa de Pollo">
+                    <h3>Hamburguesa de Pollo</h3>
+                    <p class="price">$120.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/ALIMENTOS/SUPREMA.jpg" alt="Hamburguesa de Suprema">
+                    <h3>Hamburguesa de Suprema</h3>
+                    <p class="price">$120.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bebidas -->
+        <div class="category-content" id="bebidas">
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/COCALATA.png" alt="Coca-Cola 1.5L">
+                    <h3>Coca-Cola 1.5L</h3>
+                    <p class="price">$28.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/COCA600.png" alt="Coca-Cola 600ml">
+                    <h3>Coca-Cola 600ml</h3>
+                    <p class="price">$20.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/FANTA600.png" alt="Fanta Naranja 600ml">
+                    <h3>Fanta Naranja 600ml</h3>
+                    <p class="price">$20.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/FRAPEOREO.png" alt="Frapé de Oreo">
+                    <h3>Frapé de Oreo</h3>
+                    <p class="price">$38.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/CARAMEL.png" alt="Smuttis Caramel">
+                    <h3>Smuttis Caramel</h3>
+                    <p class="price">$36.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/CHOCOMILK.png" alt="Chocomilk">
+                    <h3>Chocomilk</h3>
+                    <p class="price">$22.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/COCA.png" alt="Coca-Cola 3L">
+                    <h3>Coca-Cola 3L</h3>
+                    <p class="price">$38.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/LIMONADAMINERAL.png" alt="Limonada Mineral">
+                    <h3>Limonada Mineral</h3>
+                    <p class="price">$30.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/BOTELLAAGUA.png" alt="Agua Natural">
+                    <h3>Agua Natural (Botella)</h3>
+                    <p class="price">$16.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/SIDRAL.png" alt="Sidral Mundet">
+                    <h3>Sidral Mundet 600ml</h3>
+                    <p class="price">$20.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/JAMAICA.png" alt="Agua de Jamaica">
+                    <h3>Agua de Jamaica</h3>
+                    <p class="price">$25.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/BEBIDAS/HORCHATA.png" alt="Agua de Horchata">
+                    <h3>Agua de Horchata</h3>
+                    <p class="price">$25.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extras -->
+        <div class="category-content" id="extras">
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/FLAN NAPOLITANO.jpg" alt="Alitas BBQ">
+                    <h3>Alitas BBQ (12pz)</h3>
+                    <p class="price">$180.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/EXTRAS/ALITAS.jpg" alt="Alitas Mango Habanero">
+                    <h3>Alitas Mango Habanero (12pz)</h3>
+                    <p class="price">$180.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/EXTRAS/PAPAS.jpg" alt="Papas Chicas">
+                    <h3>Papas a la Francesa Chicas</h3>
+                    <p class="price">$30.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/EXTRAS/PAPASCH.jpg" alt="Papas Grandes">
+                    <h3>Papas a la Francesa Grandes</h3>
+                    <p class="price">$50.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Postres -->
+        <div class="category-content" id="postres">
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/PAYQUESO.jpg" alt="Pay de Queso">
+                    <h3>Pay de Queso</h3>
+                    <p class="price">$45.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/FLAN.jpg" alt="Flan Napolitano">
+                    <h3>Flan Napolitano</h3>
+                    <p class="price">$40.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/GELATINA.jpg" alt="Gelatina de Mosaico">
+                    <h3>Gelatina de Mosaico</h3>
+                    <p class="price">$35.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/HELADO.jpg" alt="Helado de Vainilla">
+                    <h3>Helado de Vainilla</h3>
+                    <p class="price">$30.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/PASTELCHOCO.jpg" alt="Pastel de Chocolate">
+                    <h3>Pastel de Chocolate</h3>
+                    <p class="price">$50.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/BROWNIE.jpg" alt="Brownie con Helado">
+                    <h3>Brownie con Helado</h3>
+                    <p class="price">$55.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/FRUTAS.jpg" alt="Copa de Frutas">
+                    <h3>Copa de Frutas</h3>
+                    <p class="price">$40.00</p>
+                </div>
+                <div class="product-card">
+                    <img src="IMAGES/POSTRES/TIRAMISU.jpg" alt="Tiramisú">
+                    <h3>Tiramisú</h3>
+                    <p class="price">$60.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="category-content" id="especialidades">
+    <div class="product-grid">
+        <div class="product-card">
+            <img src="IMAGES/ALIMENTOS/PEPERONI.jpg" alt="Especialidad 1">
+            <h3>Pepperoni</h3>
+            <p>Rodajas de pepperoni sobre queso mozzarella fundido y salsa de tomate.</p>
+        </div>
+        <div class="product-card">
+            <img src="IMAGES/ALIMENTOS/HAWAIANA.jpg" alt="Especialidad 2">
+            <h3>Hawaiana</h3>
+            <p>Jamón cocido y piña dulce sobre base de queso derretido.</p>
+        </div>
+        <div class="product-card">
+            <img src="IMAGES/ALIMENTOS/BOLOÑESA.jpg" alt="Especialidad 3">
+            <h3>Boloñesa</h3>
+            <p>Salsa de carne molida con jitomate, cebolla, especias y queso gratinado.</p>
+        </div>
+        <div class="product-card">
+            <img src="IMAGES/ALIMENTOS/4QUESOS.jpg" alt="Especialidad 4">
+            <h3>4 Quesos</h3>
+            <p>Mezcla de mozzarella, parmesano, queso azul y gouda sobre masa artesanal.</p>
+        </div>
+        <div class="product-card">
+            <img src="IMAGES/ALIMENTOS/VEGETARIANA.jpg" alt="Especialidad 5">
+            <h3>Vegetariana</h3>
+            <p>Champiñones, pimientos, tomate, cebolla y aceitunas sobre queso y salsa.</p>
+        </div>
+        <div class="product-card">
+            <img src="IMAGES/ALIMENTOS/PASTOR.webp" alt="Especialidad 6">
+            <h3>Al ´Pastor</h3>
+            <p>Carne marinada al pastor, piña asada, cebolla morada y toque de cilantro fresco.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+
+    <script src="JAVA/MENU_DIGITAL.js"></script>
+</body>
+</html>

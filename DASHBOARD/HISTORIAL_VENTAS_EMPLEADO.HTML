@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Ventas - Miches</title>
+    <link rel="stylesheet" href="CSS/HISTORIAL_VENTAS_EMPLEADO.CSS">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../IMAGES/pizza.ico">
+</head>
+
+<body>
+    <div class="background-overlay"></div>
+
+    
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <img id="cervezin" src="../IMAGES/CERVEZIN.png" alt="Logo Miches" class="logo-rustico">
+                <span>Historial de Ventas</span>
+            </div>
+
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="MENU_VENTAS.html" class="nav-link">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Volver a Ventas</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="historial.cargarHoy()">
+                        <i class="fas fa-calendar-day"></i>
+                        <span>Ver Hoy</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name" id="userName">Empleado</span>
+                    <span class="user-role">Sistema de Ventas</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Filtros -->
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label for="fecha"><i class="fas fa-calendar"></i> Fecha:</label>
+                    <input type="date" id="fecha">
+                    <button id="btnBuscar" class="btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button id="btnHoy" class="btn-secondary" onclick="historial.cargarHoy()">
+                        <i class="fas fa-calendar-day"></i> Hoy
+                    </button>
+                </div>
+                <div class="filter-info">
+                    <small id="infoFecha">Cargando ventas del dia...</small>
+                </div>
+            </section>
+
+            <!-- Resumen de Ventas -->
+            <section class="summary-section">
+                <div class="summary-cards">
+                    <div class="summary-card total">
+                        <div class="card-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Total del Día</h3>
+                            <span class="amount" id="totalDia">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-card efectivo">
+                        <div class="card-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Efectivo</h3>
+                            <span class="amount" id="totalEfectivo">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-card tarjeta">
+                        <div class="card-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Tarjeta</h3>
+                            <span class="amount" id="totalTarjeta">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-card transferencia">
+                        <div class="card-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Transferencia</h3>
+                            <span class="amount" id="totalTransferencia">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lista de Ventas -->
+            <section class="sales-section">
+                <h2><i class="fas fa-list"></i> Ventas del Día</h2>
+                <div class="sales-list" id="listaVentas">
+                    <!-- Las ventas se cargan dinámicamente aquí -->
+                </div>
+            </section>
+
+            <!-- Detalle de Ventas -->
+            <section class="section">
+                <h2><i class="fas fa-receipt"></i> Detalle de Ventas</h2>
+                <div class="table-container">
+                    <table id="tabla-ventas">
+                        <thead>
+                            <tr>
+                                <th>HORA</th>
+                                <th>EMPLEADO</th>
+                                <th>PRODUCTO</th>
+                                <th>CANTIDAD</th>
+                                <th>P. UNITARIO</th>
+                                <th>TOTAL</th>
+                                <th>MÉTODO PAGO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Datos dinámicos -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Detalle de Venta -->
+    <div id="modalDetalle" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalle Completo de Venta</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenido dinámico del modal -->
+            </div>
+        </div>
+    </div>
+
+    <script src="JAVA/VENTAS_EMPLEADO.JS"></script>
+    <script src="../JAVA_SCRIPT/ANIMATION.JS"></script>
+
+
+</body>
+
+</html>

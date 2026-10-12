@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pedidos - Pizzería</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/DOMICILIO.css">
+    <link rel="icon"type ="image/x-icon" href="IMAGES/LOGOC.PNG"/>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-phone-alt"></i> Pedidos por Llamada</h1>
+            <div class="header-controls">
+                <button id="clear-sale" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Limpiar</button>
+                <button id="complete-sale" class="btn btn-success"><i class="fas fa-check-circle"></i> Realizar Venta</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="product-selection">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-utensils"></i> Selección de Productos</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="cliente_nombre">Nombre del Cliente:</label>
+                            <input type="text" id="cliente_nombre" class="form-control" placeholder="Nombre del cliente">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono-cliente">Teléfono:</label>
+                            <input type="tel" id="telefono-cliente" class="form-control" placeholder="Teléfono">
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion-cliente">Dirección:</label>
+                            <textarea id="direccion-cliente" class="form-control" rows="2" placeholder="Dirección de entrega"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Categoría:</label>
+                            <select id="category" class="form-control">
+                                <option value="">Seleccione categoría</option>
+                                <option value="pizzas">Pizzas</option>
+                                <option value="hamburguesas">Hamburguesas</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="extras">Extras</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="product">Producto:</label>
+                            <select id="product" class="form-control" disabled>
+                                <option value="">Seleccione producto</option>
+                            </select>
+                        </div>
+                        <div class="product-image-container">
+                            <img id="product-img" src="IMAGES/LOGOC.jpg" alt="Imagen del producto">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price">Precio:</label>
+                                <input type="text" id="price" class="form-control" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantity">Cantidad:</label>
+                                <input type="number" id="quantity" class="form-control" min="1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="special-price">Precio especial:</label>
+                                <input type="number" id="special-price" class="form-control" min="0" step="0.01" placeholder="Opcional">
+                            </div>
+                        </div>
+                        <div id="specialty-group" class="form-group" style="display: none;">
+                            <label>Especialidades:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Mexicana" data-price="20"> Mexicana (+$20)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Hawaiana" data-price="15"> Hawaiana (+$15)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Cuatro Quesos" data-price="25"> 4 Quesos (+$25)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Pepperoni" data-price="10"> Pepperoni (+$10)</label>
+                            </div>
+                            <small id="specialties-help" class="form-text text-muted"></small>
+                        </div>
+                        <div id="ingredient-group" class="form-group" style="display: none;">
+                            <label>Ingredientes extra:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" class="ingredient-checkbox" value="pepperoni" data-price="15"> Pepperoni (+$15)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="jamon" data-price="12"> Jamón (+$12)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="champiñones" data-price="10"> Champiñones (+$10)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="pimientos" data-price="8"> Pimientos (+$8)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="cebolla" data-price="8"> Cebolla (+$8)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="aceitunas" data-price="10"> Aceitunas (+$10)</label>
+                            </div>
+                            <small id="ingredients-help" class="form-text text-muted"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="special-requests">Notas especiales:</label>
+                            <textarea id="special-requests" class="form-control" rows="2" placeholder="Ej: Sin cebolla, bien cocida, etc."></textarea>
+                        </div>
+                        <button id="add-product" class="btn btn-primary" disabled><i class="fas fa-plus-circle"></i> Agregar Producto</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sale-summary">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-receipt"></i> Resumen de Venta</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="payment-method">
+                            <h3>Método de Pago</h3>
+                            <div class="radio-group">
+                                <label><input type="radio" name="payment-method" value="efectivo" checked> Efectivo</label>
+                                <label><input type="radio" name="payment-method" value="transferencia"> Transferencia</label>
+                            </div>
+                            <div id="cash-container">
+                                <div class="form-group">
+                                    <label for="cash-received">Efectivo recibido:</label>
+                                    <input type="number" id="cash-received" class="form-control" min="0" step="0.01">
+                                </div>
+                                <div id="cash-change" class="change-display">Cambio: $0.00</div>
+                            </div>
+                        </div>
+                        <div class="sale-table-container">
+                            <table class="sale-table">
+                                <thead>
+                                    <tr>
+                                       <th>Telefono</th>
+                                        <th>Producto</th>
+                                        <th>Cant.</th>
+                                        <th>Precio</th>
+                                        <th>Total</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-table-body">
+                                    <!-- Productos se agregarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="total-section">
+                            <h3>Total: <span id="total-amount">$0.00</span></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ticket -->
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Ticket de Venta</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="ticket-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="print-ticket" class="btn btn-primary"><i class="fas fa-print"></i> Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../JAVA/VENTA_BUILDER.js"></script>
+    <script src="DOMICILIO.js"></script>
+</body>
+</html>

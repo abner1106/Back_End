@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica de Ventas | Pizzería</title>
+    <link rel="stylesheet" href="CSS/PRODUCTOS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="IMAGES/CERVEZIN.png" />
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Encabezado con logo -->
+        <header class="sales-header">
+            <div class="logo-wrapper">
+                <img src="IMAGES/CERVEZIN.png" alt="Logo Pizzería" class="logo-rustico">
+            </div>
+            <div class="header-content">
+                <h1>Analítica de Ventas</h1>
+                <p>Reportes basados en datos reales</p>
+            </div>
+        </header>
+
+        <!-- Filtros avanzados -->
+        <section class="filters-section">
+            <div class="filter-row">
+                <div class="filter-card">
+                    <label for="date-range"><i class="fas fa-calendar-alt"></i> Rango de fechas:</label>
+                    <div class="date-inputs">
+                        <input type="date" id="start-date" class="form-control">
+                        <span>a</span>
+                        <input type="date" id="end-date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="filter-card">
+                    <label for="sale-type"><i class="fas fa-tag"></i> Tipo de venta:</label>
+                    <select id="sale-type" class="form-control">
+                        <option value="all">Todos los tipos</option>
+                        <!--<option value="local">Local</option> -->
+                        <option value="domicilio">Domicilio</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+            <div class="filter-row">
+                <div class="filter-card">
+                    <label for="payment-method"><i class="fas fa-credit-card"></i> Método de pago:</label>
+                    <select id="payment-method" class="form-control">
+                        <option value="all">Todos los métodos</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="transferencia">Transferencia</option>
+                    </select>
+                </div>
+
+
+            </div>
+
+            <div class="action-buttons">
+                <button id="generate-report" class="btn btn-primary">
+                    <i class="fas fa-chart-bar"></i> Generar Reporte
+                </button>
+                <button id="export-pdf" class="btn btn-secondary">
+                    <i class="fas fa-file-pdf"></i> Exportar a PDF
+                </button>
+            </div>
+        </section>
+
+        <!-- Resultados -->
+        <section class="results-section">
+            <!-- Tarjetas resumen -->
+            <div class="summary-cards">
+                <div class="summary-card total-sales">
+                    <h3><i class="fas fa-coins"></i> Ventas Totales</h3>
+                    <p class="amount">$0.00</p>
+                    <p class="period">Seleccione un rango de fechas</p>
+                </div>
+
+                <div class="summary-card best-seller">
+                    <h3><i class="fas fa-crown"></i> Producto Más Vendido</h3>
+                    <p class="product">-</p>
+                    <p class="amount">0 unidades</p>
+                </div>
+
+                <div class="summary-card worst-seller">
+                    <h3><i class="fas fa-sad-tear"></i> Producto Menos Vendido</h3>
+                    <p class="product">-</p>
+                    <p class="amount">0 unidades</p>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Distribución por Productos</h3>
+                    <canvas id="productsChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Tendencia de Ventas</h3>
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tablas de resultados -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="products-tab">Productos</button>
+                    <button class="tab-btn" data-tab="sales-tab">Ventas</button>
+                </div>
+
+                <div id="products-tab" class="tab-content active">
+                    <div class="table-container">
+                        <table class="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Producto</th>
+                                    <th>Vendidos</th>
+                                    <th>Ingresos</th>
+                                    <th>% del Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body">
+                                <!-- Se llena con JS desde BD -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="sales-tab" class="tab-content">
+                    <div class="table-container">
+                        <table class="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Venta</th>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Método Pago</th>
+                                    <th>Total</th>
+                                    <th>Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-table-body">
+                                <!-- Se llena con JS desde BD -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="employees-tab" class="tab-content">
+                    <div class="table-container">
+                        <table class="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Empleado</th>
+                                    <th>Ventas</th>
+                                    <th>Total Vendido</th>
+                                    <th>Producto Más Vendido</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employees-table-body">
+                                <!-- Se llena con JS desde BD -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal para detalles -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Detalles de Venta</h2>
+            <div id="modal-body">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
+
+    <script src="JAVA/PRODUCTOS.js"></script>
+</body>
+
+</html>

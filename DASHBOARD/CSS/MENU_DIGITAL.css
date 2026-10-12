@@ -1,0 +1,650 @@
+:root {
+    --primary: #f857a6;
+    --primary-light: #730abe;
+    --secondary: #1818b1;
+    --dark: #333;
+    --light: #f8f9fa;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    --white: #ffffff;
+    --gray: #6c757d;
+    --gray-light: #e9ecef;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+/* Estilos base mejorados */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Header con gradiente */
+.header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    padding-bottom: 2.5rem;
+    margin-bottom: -1rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 1px;
+}
+
+/* Barra de categorías con efecto neumórfico */
+.category-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 96px;
+    z-index: 999;
+    margin-bottom: 2rem;
+}
+
+.category-btn {
+    padding: 0.8rem 1.8rem;
+    margin: 0.5rem;
+    border: none;
+    background-color: var(--white);
+    color: var(--dark);
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    font-size: 0.95rem;
+    box-shadow: 5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: var(--transition);
+}
+
+.category-btn:hover::before {
+    left: 100%;
+}
+
+.category-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 8px 8px 15px #d9d9d9, -8px -8px 15px #ffffff;
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, var(--secondary), #3a3aff);
+    color: var(--white);
+    box-shadow: inset 3px 3px 5px rgba(0,0,0,0.1), inset -3px -3px 5px rgba(255,255,255,0.1);
+}
+
+/* Contenedor principal con efecto de profundidad */
+.menu-container {
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    perspective: 1000px;
+}
+
+/* Efecto 3D para las categorías */
+.category-content {
+    display: none;
+    transform-style: preserve-3d;
+    animation: fadeInRotate 0.6s ease forwards;
+}
+
+@keyframes fadeInRotate {
+    from { 
+        opacity: 0;
+        transform: rotateX(15deg) translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: rotateX(0) translateY(0);
+    }
+}
+
+.category-content.active {
+    display: block;
+}
+
+/* Grid de productos con efecto mosaico */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+/* Tarjetas de producto con efecto vidrio */
+.product-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Efecto de imagen con brillo */
+.product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: var(--transition);
+    filter: brightness(0.95);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.product-card:hover img {
+    filter: brightness(1.05);
+    transform: scale(1.05);
+}
+
+.product-card h3 {
+    padding: 1.2rem 1.2rem 0.5rem;
+    font-size: 1.2rem;
+    color: var(--dark);
+    margin: 0;
+    font-weight: 600;
+}
+
+.price {
+    padding: 0 1.2rem 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.price::before {
+    content: '$';
+    font-size: 0.9em;
+    margin-right: 2px;
+}
+
+.description {
+    padding: 0 1.2rem 1.2rem;
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Efecto para combos */
+.combo-tag {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--warning), #ffd54f);
+    color: #5a3d00;
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+.product-card.combo {
+    border: 2px solid var(--warning);
+    background: rgba(255, 193, 7, 0.05);
+}
+
+.product-card.combo::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,193,7,0.1), transparent);
+    pointer-events: none;
+}
+
+/* Efecto de borde animado */
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.product-card:hover::before {
+    opacity: 1;
+}
+
+/* Responsive design mejorado */
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .category-buttons {
+        top: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .category-buttons {
+        flex-direction: row;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 1rem;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        top: 84px;
+    }
+    
+    .category-btn {
+        margin: 0 0.5rem;
+        padding: 0.7rem 1.5rem;
+        flex: 0 0 auto;
+    }
+    
+    .header {
+        padding-bottom: 2rem;
+    }
+    
+    .product-card img {
+        height: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .menu-container {
+        padding: 0 1rem;
+    }
+    
+    .product-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .category-buttons {
+        top: 76px;
+    }
+    
+    .product-card h3 {
+        font-size: 1rem;
+        padding: 1rem 1rem 0.3rem;
+    }
+    
+    .price {
+        font-size: 1.1rem;
+        padding: 0 1rem 1rem;
+    }
+    
+    .product-card img {
+        height: 140px;
+    }
+    
+    .combo-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header h1 {
+        font-size: 1.6rem;
+    }
+}
+/* Estilos para el botón de especialidades */
+.specialties-btn {
+    display: block;
+    width: calc(100% - 2.4rem);
+    margin: 0 1.2rem 1.2rem;
+    padding: 0.6rem;
+    background: linear-gradient(135deg, var(--secondary), var(--primary-light));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.specialties-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+}
+
+/* Estilos del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: var(--white);
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: var(--gray);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    color: var(--danger);
+    transform: rotate(90deg);
+}
+
+.modal-title {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.specialty-item {
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.specialty-item:hover {
+    transform: translateY(-5px);
+}
+
+.specialty-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    border: 2px solid var(--gray-light);
+    transition: var(--transition);
+}
+
+.specialty-item:hover img {
+    border-color: var(--primary);
+}
+
+.specialty-item p {
+    font-weight: 500;
+    color: var(--dark);
+    margin: 0;
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    
+    .specialties-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+    
+    .specialty-item img {
+        height: 80px;
+    }
+}
+
+/* Media Queries mejoradas para móviles */
+@media (max-width: 768px) {
+    /* Header más compacto */
+    .header {
+        padding: 1rem;
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+        padding-bottom: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Barra de categorías optimizada */
+    .category-buttons {
+        top: 72px;
+        padding: 0.8rem 0.5rem;
+        justify-content: flex-start;
+        background: var(--white);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Para Firefox */
+    }
+    
+    .category-buttons::-webkit-scrollbar {
+        display: none; /* Para Chrome/Safari */
+    }
+    
+    .category-btn {
+        padding: 0.6rem 1.2rem;
+        margin: 0 0.3rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        box-shadow: 3px 3px 6px #d9d9d9, -3px -3px 6px #ffffff;
+    }
+    
+    /* Contenedor principal */
+    .menu-container {
+        padding: 0 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Grid de productos optimizado */
+    .product-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    /* Tarjetas de producto mejoradas */
+    .product-card {
+        border-radius: 12px;
+    }
+    
+    .product-card img {
+        height: 120px;
+    }
+    
+    .product-card h3 {
+        font-size: 0.95rem;
+        padding: 0.8rem 0.8rem 0.3rem;
+    }
+    
+    .price {
+        font-size: 1.1rem;
+        padding: 0 0.8rem 0.8rem;
+    }
+    
+    .description {
+        display: none; /* Ocultamos descripción en móviles para ahorrar espacio */
+    }
+    
+    .combo-tag {
+        top: 0.5rem;
+        right: 0.5rem;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+    }
+    
+    /* Botón de especialidades */
+    .specialties-btn {
+        width: calc(100% - 1.6rem);
+        margin: 0 0.8rem 1rem;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes para pantallas muy pequeñas */
+    .header {
+        padding-bottom: 1.2rem;
+    }
+    
+    .header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .category-buttons {
+        top: 68px;
+    }
+    
+    .product-grid {
+        gap: 0.8rem;
+    }
+    
+    .product-card img {
+        height: 100px;
+    }
+    
+    .product-card h3 {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.6rem 0.2rem;
+    }
+    
+    .price {
+        font-size: 1rem;
+    }
+    
+    /* Modal en móviles */
+    .modal-content {
+        margin: 2% auto;
+        padding: 1.5rem 1rem;
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .modal-title {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .specialties-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 1rem;
+    }
+    
+    .specialty-item img {
+        height: 70px;
+    }
+    
+    .specialty-item p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 360px) {
+    /* Ajustes adicionales para dispositivos muy pequeños */
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-card img {
+        height: 140px;
+    }
+    
+    .category-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
