@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Fermin: este script se usa en la pantalla de cambio de contraseña
+    // (PASSWORD.PHP). Da retroalimentación inmediata y valida el formulario
+    // antes de enviarlo; PASSWORD.PHP repite las reglas en el servidor.
     const nuevaPassword = document.getElementById('nueva_password');
     const confirmarPassword = document.getElementById('confirmar_password');
     const strengthFill = document.getElementById('strength-fill');
@@ -11,14 +14,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const reqLetras = document.getElementById('req-letras');
     const reqLongitud = document.getElementById('req-longitud');
 
-    // Validar fortaleza de contraseña en tiempo real
+    // Al escribir, actualiza los requisitos y el indicador de fortaleza sin
+    // esperar el envío, para que el usuario sepa qué debe corregir.
     nuevaPassword.addEventListener('input', function () {
         const password = this.value;
         validarFortaleza(password);
         verificarCoincidencia();
     });
 
-    // Verificar coincidencia de contraseñas
+    // Compara ambos campos mientras se escribe para avisar si no coinciden.
     confirmarPassword.addEventListener('input', verificarCoincidencia);
 
     function validarFortaleza(password) {
@@ -76,7 +80,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Validación antes de enviar el formulario
+    // Bloquea el envío si la contraseña no cumple los requisitos o no coincide
+    // con su confirmación. Esta validación mejora la experiencia, pero no
+    // sustituye la validación del backend en PASSWORD.PHP.
     form.addEventListener('submit', function (e) {
         const password = nuevaPassword.value;
         const confirmar = confirmarPassword.value;

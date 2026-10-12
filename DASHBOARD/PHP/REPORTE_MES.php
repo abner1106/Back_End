@@ -4,6 +4,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
+require_once __DIR__ . '/REPORTE_PERIODO_ADAPTER.php';
+
 $logFile = 'errores.log';
 
 function logError($message) {
@@ -23,71 +25,13 @@ try {
         throw new Exception('Error de conexión a la base de datos', 500);
     }
 
-    $tipo = $_GET['tipo'] ?? 'dia';
-    
-    if (!in_array($tipo, ['dia', 'semana', 'mes', 'personalizado'])) {
-        throw new Exception('Tipo de reporte no válido', 400);
-    }
-
-    // Construir filtros base sin alias
-    $filtroBase = "";
-    $params = [];
-    $titulo = "";
-
-    switch($tipo) {
-        case 'dia':
-            $fecha = $_GET['fecha'] ?? date('Y-m-d');
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-                throw new Exception('Formato de fecha inválido para día', 400);
-            }
-            $filtroBase = "DATE(%s) = :fecha";
-            $params[':fecha'] = $fecha;
-            $titulo = "Ventas del día ".date('d/m/Y', strtotime($fecha));
-            break;
-            
-        case 'semana':
-            $fecha = $_GET['fecha'] ?? date('Y-m-d');
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-                throw new Exception('Formato de fecha inválido para semana', 400);
-            }
-            $domingo = date('Y-m-d', strtotime($fecha.' +6 days'));
-            $filtroBase = "DATE(%s) BETWEEN :fecha AND :domingo";
-            $params[':fecha'] = $fecha;
-            $params[':domingo'] = $domingo;
-            $titulo = "Ventas de la semana ".date('d/m/Y', strtotime($fecha))." al ".date('d/m/Y', strtotime($domingo));
-            break;
-            
-        case 'mes':
-            $fecha = $_GET['fecha'] ?? date('Y-m');
-            if (!preg_match('/^\d{4}-\d{2}$/', $fecha)) {
-                throw new Exception('Formato de mes inválido', 400);
-            }
-            $primerDia = date('Y-m-01', strtotime($fecha));
-            $ultimoDia = date('Y-m-t', strtotime($fecha));
-            $filtroBase = "DATE(%s) BETWEEN :primerDia AND :ultimoDia";
-            $params[':primerDia'] = $primerDia;
-            $params[':ultimoDia'] = $ultimoDia;
-            $titulo = "Ventas del mes ".date('m/Y', strtotime($fecha));
-            break;
-            
-        case 'personalizado':
-            $inicio = $_GET['inicio'] ?? date('Y-m-d');
-            $fin = $_GET['fin'] ?? date('Y-m-d');
-            
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $inicio) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fin)) {
-                throw new Exception('Formato de fechas inválido', 400);
-            }
-            
-            if ($inicio > $fin) {
-                throw new Exception('La fecha de inicio no puede ser mayor a la fecha final', 400);
-            }
-            
-            $filtroBase = "DATE(%s) BETWEEN :inicio AND :fin";
-            $params[':inicio'] = $inicio;
-            $params[':fin'] = $fin;
-            $titulo = "Ventas del ".date('d/m/Y', strtotime($inicio))." al ".date('d/m/Y', strtotime($fin));
-            break;
-    }
+    $period = (new ReportPeriodAdapter())->adapt($_GET);
+    $filtroBase = 'DATE(%s) BETWEEN :inicio AND :fin';
+    $params = [
+        ':inicio' => $period['inicio'],
+        ':fin' => $period['fin'],
+    ];
+    $titulo = $period['titulo'];
 
     // Construir WHERE específicos para cada tabla
     $whereVentas = sprintf($filtroBase, 'v.fecha');

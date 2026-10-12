@@ -1,23 +1,21 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y es administrativo
-if (!isset($_SESSION['empleado_id']) || $_SESSION['empleado_tipo'] !== 'administrativo') {
+require_once 'CONEXION.php';
+require_once __DIR__ . '/EMPLEADOS_PROXY.php';
+
+$employeeManager = new AdminEmployeeProxy(new PdoEmployeeRepository($conn), $_SESSION);
+try {
+    $employeeManager->authorize();
+} catch (DomainException $error) {
     header("Location: ERRORPERMISOS.PHP");
     exit();
 }
-
-require_once 'CONEXION.php';
 
 // Inicializar variables
 $mensaje = "";
 $error = "";
 $accion = "";
-
-// Iniciar sesión si aún no se ha iniciado
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // Procesar cierre de sesión
 if (isset($_GET['logout'])) {
@@ -38,19 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['crear_empleado'])) {
     $contraseña = $_POST['contraseña'];
 
     try {
-        // Verificar si el usuario ya existe
-        $sql_check = "SELECT id_empleado FROM empleados WHERE usuario = ?";
-        $stmt_check = $conn->prepare($sql_check);
-        $stmt_check->execute([$usuario]);
-
-        if ($stmt_check->rowCount() > 0) {
+        if ($employeeManager->usernameExists($usuario)) {
             $error = "El nombre de usuario ya existe";
         } else {
-            // **CORRECCIÓN: Usar SHA2 para encriptar la contraseña**
-            $sql = "INSERT INTO empleados (nombre, tipo, usuario, contraseña) VALUES (?, ?, ?, SHA2(?, 256))";
-            $stmt = $conn->prepare($sql);
-
-            if ($stmt->execute([$nombre, $tipo, $usuario, $contraseña])) {
+            if ($employeeManager->create($nombre, $tipo, $usuario, $contraseña)) {
                 $mensaje = "Empleado creado exitosamente con contraseña encriptada";
                 $accion = "creacion";
             } else {
@@ -69,10 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_empleado'])) 
     $motivo = trim($_POST['motivo_eliminacion']);
 
     try {
-        $sql = "DELETE FROM empleados WHERE id_empleado = ?";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt->execute([$id_empleado])) {
+        if ($employeeManager->delete($id_empleado)) {
             $mensaje = "Empleado eliminado exitosamente. Motivo: " . $motivo;
             $accion = "eliminacion";
         } else {
@@ -86,9 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['eliminar_empleado'])) 
 
 // Obtener lista de empleados
 try {
-    $sql_empleados = "SELECT id_empleado, nombre, tipo, usuario FROM empleados ORDER BY id_empleado";
-    $stmt_empleados = $conn->query($sql_empleados);
-    $empleados = $stmt_empleados->fetchAll();
+    $empleados = $employeeManager->all();
 
 } catch (PDOException $e) {
     $error = "Error al cargar empleados: " . $e->getMessage();
