@@ -1,4 +1,4 @@
-li<?php
+<?php
 
 final class PizzeriaConnection
 {
