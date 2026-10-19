@@ -139,6 +139,8 @@ final class VentaRegistrationFacade
             throw new InvalidArgumentException('El cuerpo debe incluir una lista de productos.');
         }
 
+        // Chiquilín, aquí se usa Builder para armar y validar la venta
+        // paso a paso antes de guardarla.
         $builder = (new VentaBuilder())
             ->setEmpleado($data['id_empleado'] ?? null)
             ->setTipoVenta($data['tipo_venta'] ?? 'local')

@@ -4,6 +4,8 @@ session_start();
 require_once 'CONEXION.php';
 require_once __DIR__ . '/EMPLEADOS_PROXY.php';
 
+// Chiquilín, aquí se usa Proxy para controlar el acceso administrativo
+// antes de permitir operaciones sobre los empleados en la base de datos.
 $employeeManager = new AdminEmployeeProxy(new PdoEmployeeRepository($conn), $_SESSION);
 try {
     $employeeManager->authorize();

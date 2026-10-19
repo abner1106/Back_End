@@ -377,8 +377,8 @@ async function completeSale() {
     
     try {
         // Prepare sale data
-        // El mismo Builder construye el pedido a domicilio y valida los datos
-        // obligatorios antes de que se realice la petición HTTP.
+        // Chiquilín, aquí se usa Builder para armar el pedido a domicilio y
+        // validar los datos obligatorios antes de la petición HTTP.
         const saleBuilder = new window.VentaBuilder()
             .setEmpleado(currentEmployeeId)
             .setTipoVenta('domicilio')

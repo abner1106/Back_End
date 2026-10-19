@@ -25,6 +25,8 @@ try {
         throw new Exception('Error de conexión a la base de datos', 500);
     }
 
+    // Chiquilín, aquí se usa Adapter para convertir los filtros HTTP
+    // en un período uniforme que pueda procesar el reporte.
     $period = (new ReportPeriodAdapter())->adapt($_GET);
     $filtroBase = 'DATE(%s) BETWEEN :inicio AND :fin';
     $params = [

@@ -41,5 +41,6 @@ final class PizzeriaConnection
     }
 }
 
-// Conserva el contrato esperado por las páginas existentes.
+// Chiquilín, aquí se usa Singleton: todas las páginas reciben la misma
+// conexión PDO durante la solicitud mediante esta instancia compartida.
 $conn = PizzeriaConnection::getInstance();

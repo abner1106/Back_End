@@ -111,6 +111,8 @@
         }
     }
 
+    // Chiquilín, aquí se usa Singleton para obtener el controlador único
+    // que inicializa las animaciones del inicio de sesión.
     const initialize = () => AdminLoginAnimationController.getInstance().initialize();
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize, { once: true });

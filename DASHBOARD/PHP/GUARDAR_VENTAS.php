@@ -23,7 +23,12 @@ try {
         throw new InvalidArgumentException('El cuerpo JSON debe ser un objeto.');
     }
 
+    // Chiquilín, aquí se usa Decorator para añadir registro de errores y
+    // operaciones sin cambiar el repositorio PDO.
     $repository = new LoggingVentaRepositoryDecorator(new PdoVentaRepository($conn));
+    // Chiquilín, aquí se usa Facade para coordinar la creación y el registro
+    // de la venta detrás de una sola interfaz.
+    // La fábrica concreta aplica Factory Method al preparar los productos.
     $sale = new VentaRegistrationFacade($repository, new ProductoVentaLocalFactory());
     $result = $sale->register($data);
 
