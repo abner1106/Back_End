@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script src="../JAVA/SESSION_GUARD.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Pedidos - Pizzería</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="CSS/DOMICILIO.css">
-    <link rel="icon"type ="image/x-icon" href="IMAGES/LOGOC.PNG"/>
+    <link rel="stylesheet" href="../CSS/DOMICILIO.css">
+    <link rel="icon" type="image/x-icon" href="../IMAGES/LOGOC.PNG"/>
 </head>
 <body>
     <div class="container">
         <header>
             <h1><i class="fas fa-phone-alt"></i> Pedidos por Llamada</h1>
             <div class="header-controls">
+                <a class="btn btn-primary" href="../PEDIDOS_DOMICILIO.html"><i class="fas fa-route"></i> Estado de pedidos</a>
                 <button id="clear-sale" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Limpiar</button>
                 <button id="complete-sale" class="btn btn-success"><i class="fas fa-check-circle"></i> Realizar Venta</button>
             </div>
@@ -54,7 +56,7 @@
                             </select>
                         </div>
                         <div class="product-image-container">
-                            <img id="product-img" src="IMAGES/LOGOC.jpg" alt="Imagen del producto">
+                            <img id="product-img" src="../IMAGES/LOGOC.jpg" alt="Imagen del producto">
                         </div>
                         <div class="form-row">
                             <div class="form-group">
@@ -92,6 +94,29 @@
                             </div>
                             <small id="ingredients-help" class="form-text text-muted"></small>
                         </div>
+                        <div class="form-group extra-editor">
+                            <label for="extra-catalog">Agregar extra al producto:</label>
+                            <div class="form-row">
+                                <input id="extra-custom-name" class="form-control" type="text"
+                                    placeholder="Otro extra (ej. más alcohol)" aria-label="Nombre del extra personalizado">
+                                <select id="extra-catalog" class="form-control">
+                                    <option value="pepperoni" data-price="15">Pepperoni ($15)</option>
+                                    <option value="jamon" data-price="12">Jamón ($12)</option>
+                                    <option value="champiñones" data-price="10">Champiñones ($10)</option>
+                                    <option value="pimientos" data-price="8">Pimientos ($8)</option>
+                                    <option value="cebolla" data-price="8">Cebolla ($8)</option>
+                                    <option value="aceitunas" data-price="10">Aceitunas ($10)</option>
+                                </select>
+                                <select id="extra-pricing" class="form-control" aria-label="Estrategia de precio del extra">
+                                    <option value="standard">Precio estándar</option>
+                                    <option value="employee">Precio definido por empleado</option>
+                                </select>
+                                <input id="extra-manual-price" class="form-control" type="number" min="0" step="0.01"
+                                    placeholder="Precio manual" aria-label="Precio manual del extra" hidden>
+                                <button id="add-extra" class="btn btn-primary" type="button">Añadir extra</button>
+                            </div>
+                            <ul id="pending-extras" class="pending-extras" aria-live="polite"></ul>
+                        </div>
                         <div class="form-group">
                             <label for="special-requests">Notas especiales:</label>
                             <textarea id="special-requests" class="form-control" rows="2" placeholder="Ej: Sin cebolla, bien cocida, etc."></textarea>
@@ -108,18 +133,8 @@
                     </div>
                     <div class="card-body">
                         <div class="payment-method">
-                            <h3>Método de Pago</h3>
-                            <div class="radio-group">
-                                <label><input type="radio" name="payment-method" value="efectivo" checked> Efectivo</label>
-                                <label><input type="radio" name="payment-method" value="transferencia"> Transferencia</label>
-                            </div>
-                            <div id="cash-container">
-                                <div class="form-group">
-                                    <label for="cash-received">Efectivo recibido:</label>
-                                    <input type="number" id="cash-received" class="form-control" min="0" step="0.01">
-                                </div>
-                                <div id="cash-change" class="change-display">Cambio: $0.00</div>
-                            </div>
+                            <h3>Cobro al entregar</h3>
+                            <p>El método de pago se confirmará cuando marques el pedido como cobrado.</p>
                         </div>
                         <div class="sale-table-container">
                             <table class="sale-table">
@@ -166,6 +181,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../JAVA/VENTA_BUILDER.js"></script>
+    <script src="../JAVA/PEDIDO_DOMICILIO_PATRONES.js"></script>
     <script src="DOMICILIO.js"></script>
 </body>
 </html>

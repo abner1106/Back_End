@@ -62,7 +62,10 @@ const ingredientsPrices = {
 // Variables globales
 let currentSale = [];
 const saleItemPrototype = new window.SaleItemPrototype();
-let currentEmployeeId = 1; // ID del empleado (debería venir de sesión)
+const pricingPatterns = window.PedidoDomicilioPatterns;
+const domicilioProcessor = new pricingPatterns.ProcesadorDomicilio();
+let currentEmployeeId = null;
+let pendingExtras = [];
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
@@ -70,14 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('category').addEventListener('change', loadProducts);
     document.getElementById('product').addEventListener('change', showProductDetails);
     document.getElementById('add-product').addEventListener('click', addProductToSale);
+    document.getElementById('add-extra').addEventListener('click', addPendingExtra);
+    document.getElementById('extra-pricing').addEventListener('change', updateExtraPricingUI);
+    document.getElementById('pending-extras').addEventListener('click', removePendingExtra);
     document.getElementById('clear-sale').addEventListener('click', clearSale);
     document.getElementById('complete-sale').addEventListener('click', completeSale);
-    
-    // Eventos para métodos de pago
-    document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
-        radio.addEventListener('change', updatePaymentUI);
-    });
-    document.getElementById('cash-received').addEventListener('input', calculateChange);
     
     // Cerrar modal
     document.querySelector('.close').addEventListener('click', () => {
@@ -85,8 +85,94 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Inicializar UI
-    updatePaymentUI();
+    document.getElementById('complete-sale').disabled = true;
+    loadCurrentEmployee();
+    updateExtraPricingUI();
 });
+
+async function loadCurrentEmployee() {
+    try {
+        const response = await fetch('../PHP/OBTENER_EMPLEADO.PHP', {
+            credentials: 'same-origin',
+            cache: 'no-store'
+        });
+        const employee = await response.json();
+        if (!response.ok || employee.success !== true
+            || !Number.isInteger(Number(employee.id_empleado)) || Number(employee.id_empleado) <= 0) {
+            throw new Error(employee.message || 'No se pudo identificar al empleado.');
+        }
+
+        currentEmployeeId = Number(employee.id_empleado);
+        document.getElementById('complete-sale').disabled = false;
+    } catch (error) {
+        showAlert('error', 'Sesión no disponible', error.message);
+    }
+}
+
+function updateExtraPricingUI() {
+    const employeePricing = document.getElementById('extra-pricing').value === 'employee';
+    const manualPrice = document.getElementById('extra-manual-price');
+    manualPrice.hidden = !employeePricing;
+    manualPrice.required = employeePricing;
+}
+
+function addPendingExtra() {
+    const catalog = document.getElementById('extra-catalog');
+    const option = catalog.options[catalog.selectedIndex];
+    const pricing = document.getElementById('extra-pricing').value;
+    const customName = document.getElementById('extra-custom-name').value.trim();
+    const standardPrice = customName ? 0 : Number(option.dataset.price);
+    const manualPrice = Number(document.getElementById('extra-manual-price').value);
+
+    if (customName && pricing !== 'employee') {
+        showAlert('error', 'Selecciona precio manual', 'Un extra personalizado requiere que el empleado defina su precio.');
+        return;
+    }
+    if (pricing === 'employee' && (!Number.isFinite(manualPrice) || manualPrice < 0)) {
+        showAlert('error', 'Precio inválido', 'Ingresa un precio manual igual o mayor a cero.');
+        return;
+    }
+
+    // Chiquilín, Strategy elige la regla de precio aquí; Extra la ejecuta igual
+    // para todos los extras, evitando repartir condiciones por el formulario.
+    const strategy = pricing === 'employee'
+        ? new pricingPatterns.PrecioEmpleadoStrategy()
+        : new pricingPatterns.PrecioEstandarStrategy();
+    pendingExtras.push(new pricingPatterns.Extra(
+        customName || option.textContent.replace(/\s*\(\$[\d.]+\)\s*$/, ''),
+        standardPrice,
+        1,
+        strategy,
+        pricing === 'employee' ? manualPrice : standardPrice
+    ));
+    document.getElementById('extra-custom-name').value = '';
+    document.getElementById('extra-manual-price').value = '';
+    renderPendingExtras();
+}
+
+function renderPendingExtras() {
+    const list = document.getElementById('pending-extras');
+    list.replaceChildren(...pendingExtras.map((extra, index) => {
+        const item = document.createElement('li');
+        const price = extra.estrategia.calcularPrecio(extra);
+        item.textContent = `${extra.nombre} ($${price.toFixed(2)}) `;
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'delete-btn extra-remove-btn';
+        remove.dataset.index = String(index);
+        remove.textContent = 'Quitar';
+        remove.setAttribute('aria-label', `Quitar ${extra.nombre}`);
+        item.appendChild(remove);
+        return item;
+    }));
+}
+
+function removePendingExtra(event) {
+    const button = event.target.closest('button[data-index]');
+    if (!button) return;
+    pendingExtras.splice(Number(button.dataset.index), 1);
+    renderPendingExtras();
+}
 
 // Cargar productos según categoría seleccionada
 function loadProducts() {
@@ -98,7 +184,7 @@ function loadProducts() {
     productSelect.disabled = !category;
     document.getElementById('add-product').disabled = true;
     document.getElementById('price').value = '';
-    document.getElementById('product-img').src = 'IMAGES/LOGOC.jpg';
+    document.getElementById('product-img').src = '../IMAGES/LOGOC.jpg';
     
     // Ocultar secciones de pizza
     document.getElementById('specialty-group').style.display = 'none';
@@ -127,7 +213,7 @@ function showProductDetails() {
     if (selectedOption.value) {
         // Mostrar precio e imagen
         document.getElementById('price').value = '$' + selectedOption.dataset.price;
-        document.getElementById('product-img').src = selectedOption.dataset.image;
+        document.getElementById('product-img').src = `../${selectedOption.dataset.image}`;
         document.getElementById('add-product').disabled = false;
         
         // Mostrar opciones especiales para pizzas
@@ -165,20 +251,37 @@ function addProductToSale() {
     // Obtener datos básicos
     let productName = selectedOption.value;
     let basePrice = parseFloat(selectedOption.dataset.price);
-    let quantity = parseInt(document.getElementById('quantity').value) || 1;
-    let specialPrice = parseFloat(document.getElementById('special-price').value) || basePrice;
+    const quantity = Number(document.getElementById('quantity').value);
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+        showAlert('error', 'Cantidad inválida', 'La cantidad debe ser un entero mayor que cero.');
+        return;
+    }
+    const manualBasePrice = document.getElementById('special-price').value;
+    let productPrice = manualBasePrice === '' ? basePrice : Number(manualBasePrice);
+    if (!Number.isFinite(productPrice) || productPrice < 0) {
+        showAlert('error', 'Precio inválido', 'El precio base debe ser igual o mayor a cero.');
+        return;
+    }
     let specialRequests = document.getElementById('special-requests').value;
     
     // Procesar especialidades e ingredientes para pizzas
     let specialties = [];
     let ingredients = [];
-    let extraCost = 0;
+    const extras = [];
+    // Chiquilín, reutilizamos Strategy para los extras de catálogo; el cálculo
+    // de la línea no necesita saber de dónde salió cada precio.
+    const standardPricing = new pricingPatterns.PrecioEstandarStrategy();
     
     if (category === 'pizzas') {
         // Obtener especialidades seleccionadas
         document.querySelectorAll('.specialty-checkbox:checked').forEach(checkbox => {
             specialties.push(checkbox.value);
-            extraCost += parseFloat(checkbox.dataset.price) || 0;
+            extras.push(new pricingPatterns.Extra(
+                checkbox.value,
+                Number(checkbox.dataset.price) || 0,
+                quantity,
+                standardPricing
+            ));
         });
         
         // Obtener ingredientes extras (solo si es combo o no hay especialidades)
@@ -186,23 +289,41 @@ function addProductToSale() {
         if (isCombo || specialties.length === 0) {
             document.querySelectorAll('.ingredient-checkbox:checked').forEach(checkbox => {
                 ingredients.push(checkbox.value);
-                extraCost += ingredientsPrices[checkbox.value] || 0;
+                extras.push(new pricingPatterns.Extra(
+                    checkbox.value,
+                    ingredientsPrices[checkbox.value] || 0,
+                    quantity,
+                    standardPricing
+                ));
             });
         }
         
-        // Aplicar precio especial si se especificó
-        if (!document.getElementById('special-price').value) {
-            specialPrice = basePrice + extraCost;
-        }
     }
+
+    const itemExtras = [...extras, ...pendingExtras.map(extra => new pricingPatterns.Extra(
+        extra.nombre,
+        extra.precioEstandar,
+        quantity,
+        extra.estrategia,
+        extra.precioEmpleado
+    ))];
+    const productBase = new pricingPatterns.ProductoBase(productName, productPrice, quantity);
+    const composite = new pricingPatterns.PedidoComposite();
+    // Chiquilín, Composite suma producto y cualquier número de extras con la
+    // misma operación; así evitamos una suma distinta por cada combinación.
+    composite.agregar(productBase);
+    itemExtras.forEach(extra => composite.agregar(extra));
+    const lineTotal = composite.getCosto();
+    const unitPrice = lineTotal / quantity;
     
     // Construir nombre para mostrar en el ticket
     let displayName = productName;
     if (specialties.length > 0) {
         displayName += ` (${specialties.join(', ')})`;
     }
-    if (ingredients.length > 0) {
-        displayName += ` [Extra: ${ingredients.join(', ')}]`;
+    const allExtraNames = [...ingredients, ...pendingExtras.map(extra => extra.nombre)];
+    if (allExtraNames.length > 0) {
+        displayName += ` [Extra: ${allExtraNames.join(', ')}]`;
     }
     if (specialRequests) {
         displayName += ` [Nota: ${specialRequests}]`;
@@ -212,13 +333,16 @@ function addProductToSale() {
     currentSale.push(saleItemPrototype.clone({
         name: displayName,
         originalName: productName,
-        price: specialPrice,
+        price: unitPrice,
         quantity: quantity,
-        subtotal: specialPrice * quantity,
+        subtotal: lineTotal,
         category: category,
         specialties: specialties,
         ingredients: ingredients,
-        specialRequests: specialRequests
+        specialRequests: specialRequests,
+        productoBase: productBase,
+        extras: itemExtras,
+        composite: composite
     }));
     
     // Actualizar UI
@@ -231,6 +355,8 @@ function addProductToSale() {
     document.getElementById('special-requests').value = '';
     document.querySelectorAll('.specialty-checkbox').forEach(cb => cb.checked = false);
     document.querySelectorAll('.ingredient-checkbox').forEach(cb => cb.checked = false);
+    pendingExtras = [];
+    renderPendingExtras();
 }
 
 // [El resto del código permanece igual hasta la función updateSalesTable]
@@ -244,19 +370,29 @@ function updateSalesTable() {
     
     currentSale.forEach((item, index) => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${telefono}</td>
-            <td>${item.name}</td>
-            <td>${item.quantity}</td>
-            <td>$${item.price.toFixed(2)}</td>
-            <td>$${item.subtotal.toFixed(2)}</td>
-            <td><button class="delete-btn" data-index="${index}">Eliminar</button></td>
-        `;
+        [
+            telefono,
+            item.name,
+            String(item.quantity),
+            `$${item.price.toFixed(2)}`,
+            `$${item.subtotal.toFixed(2)}`
+        ].forEach(value => {
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
+        const actionCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-btn sale-delete-btn';
+        deleteButton.dataset.index = String(index);
+        deleteButton.textContent = 'Eliminar';
+        actionCell.appendChild(deleteButton);
+        row.appendChild(actionCell);
         tableBody.appendChild(row);
     });
     
     // Agregar eventos a los botones de eliminar
-    document.querySelectorAll('.delete-btn').forEach(btn => {
+    document.querySelectorAll('.sale-delete-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const index = parseInt(this.dataset.index);
             currentSale.splice(index, 1);
@@ -270,43 +406,13 @@ function updateSalesTable() {
 
 // Calcular total de la venta
 function calculateTotal() {
-    const total = currentSale.reduce((sum, item) => sum + item.subtotal, 0);
+    const total = currentSale.length ? domicilioProcessor.procesar(currentSale).total : 0;
     document.getElementById('total-amount').textContent = `$${total.toFixed(2)}`;
-    calculateChange();
-}
-
-// Calcular cambio
-function calculateChange() {
-    const total = currentSale.reduce((sum, item) => sum + item.subtotal, 0);
-    const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
-    const change = cashReceived - total;
-    
-    if (change >= 0) {
-        document.getElementById('cash-change').textContent = `Cambio: $${change.toFixed(2)}`;
-    } else {
-        document.getElementById('cash-change').textContent = `Faltan: $${Math.abs(change).toFixed(2)}`;
-    }
-}
-
-// Actualizar UI de pago
-function updatePaymentUI() {
-    const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-    const cashContainer = document.getElementById('cash-container');
-    
-    if (paymentMethod === 'efectivo') {
-        cashContainer.style.display = 'block';
-        document.getElementById('cash-received').disabled = false;
-        calculateChange();
-    } else {
-        cashContainer.style.display = 'none';
-        document.getElementById('cash-received').disabled = true;
-        document.getElementById('cash-change').textContent = 'Cambio: $0.00';
-    }
 }
 
 // Limpiar venta
-function clearSale() {
-    if (confirm('¿Estás seguro de limpiar la venta actual?')) {
+function clearSale(force = false) {
+    if (force || confirm('¿Estás seguro de limpiar la venta actual?')) {
         currentSale = [];
         updateSalesTable();
         calculateTotal();
@@ -319,18 +425,21 @@ function clearSale() {
         document.getElementById('quantity').value = '1';
         document.getElementById('special-price').value = '';
         document.getElementById('special-requests').value = '';
-        document.getElementById('product-img').src = 'IMAGES/LOGOC.jpg';
+        document.getElementById('product-img').src = '../IMAGES/LOGOC.jpg';
         document.getElementById('add-product').disabled = true;
         document.getElementById('specialty-group').style.display = 'none';
         document.getElementById('ingredient-group').style.display = 'none';
         document.querySelectorAll('.specialty-checkbox').forEach(cb => cb.checked = false);
         document.querySelectorAll('.ingredient-checkbox').forEach(cb => cb.checked = false);
+        pendingExtras = [];
+        renderPendingExtras();
+        document.getElementById('extra-pricing').value = 'standard';
+        document.getElementById('extra-manual-price').value = '';
+        document.getElementById('extra-custom-name').value = '';
+        updateExtraPricingUI();
         document.getElementById('cliente_nombre').value = '';
         document.getElementById('telefono-cliente').value = '';
         document.getElementById('direccion-cliente').value = '';
-        document.querySelector('input[name="payment-method"][value="efectivo"]').checked = true;
-        document.getElementById('cash-received').value = '';
-        updatePaymentUI();
     }
 }
 
@@ -356,18 +465,11 @@ async function completeSale() {
     }
     
     // Get payment data
-    const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value;
-    const totalAmount = currentSale.reduce((sum, item) => sum + item.subtotal, 0);
-    
-    // Validate cash payment
-    if (paymentMethod === 'efectivo') {
-        const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
-        if (cashReceived < totalAmount) {
-            showAlert('error', 'Fondos insuficientes', 
-                `Recibido: $${cashReceived.toFixed(2)}\nTotal: $${totalAmount.toFixed(2)}`);
-            return;
-        }
-    }
+    // Chiquilín, ventas.metodo_pago es obligatorio; se guarda un valor inicial
+    // y la pantalla de estado lo reemplaza al confirmar el cobro real.
+    const paymentMethod = 'efectivo';
+    const processedOrder = domicilioProcessor.procesar(currentSale);
+    const totalAmount = processedOrder.total;
     
     // Prepare UI
     const submitBtn = document.getElementById('complete-sale');
@@ -391,7 +493,10 @@ async function completeSale() {
                 nombre: item.originalName,
                 categoria: item.category,
                 cantidad: item.quantity,
-                precio: item.price
+                precio: item.price,
+                descripcion: item.originalName,
+                especialidades: [...item.specialties, ...item.ingredients, ...item.extras.map(extra => extra.nombre)].join(', '),
+                observaciones: item.specialRequests || null
             });
         });
         const saleData = saleBuilder.build();
@@ -426,8 +531,8 @@ async function completeSale() {
         
         // Success - show ticket and clear
         showAlert('success', 'Venta completada', `ID de venta: ${responseData.data.id_venta}`);
-        generateTicket(responseData.data.id_venta);
-        clearSale();
+        generateTicket(responseData.data.id_venta, processedOrder.ticket);
+        clearSale(true);
         
     } catch (error) {
         console.error('Error en venta:', error);
@@ -503,8 +608,8 @@ function showAlert(type, title, message = '') {
     const alert = document.createElement('div');
     alert.className = `alert ${type}`;
     alert.innerHTML = `
-        <h4>${title}</h4>
-        ${message ? `<p>${message}</p>` : ''}
+        <h4>${escapeHtml(title)}</h4>
+        ${message ? `<p>${escapeHtml(message)}</p>` : ''}
         <button class="close-alert">&times;</button>
     `;
     
@@ -522,15 +627,24 @@ function showAlert(type, title, message = '') {
     });
 }
 
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[character]);
+}
+
 // Generar ticket de venta
-function generateTicket(ventaId) {
+function generateTicket(ventaId, ticket) {
     const now = new Date();
     const ticketContent = document.getElementById('ticket-content');
     const clienteNombre = document.getElementById('cliente_nombre').value.trim();
     const telefono = document.getElementById('telefono-cliente').value.trim();
     const direccion = document.getElementById('direccion-cliente').value.trim();
-    const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-    const total = currentSale.reduce((sum, item) => sum + item.subtotal, 0);
+    const total = ticket.total;
     
     let ticketHTML = `
         <div class="ticket-header">
@@ -542,9 +656,9 @@ function generateTicket(ventaId) {
         
         <div class="ticket-client">
             <h3>Datos del Cliente</h3>
-            <p><strong>Nombre:</strong> ${clienteNombre}</p>
-            <p><strong>Teléfono:</strong> ${telefono}</p>
-            <p><strong>Dirección:</strong> ${direccion}</p>
+            <p><strong>Nombre:</strong> ${escapeHtml(clienteNombre)}</p>
+            <p><strong>Teléfono:</strong> ${escapeHtml(telefono)}</p>
+            <p><strong>Dirección:</strong> ${escapeHtml(direccion)}</p>
         </div>
         
         <table class="ticket-items">
@@ -558,11 +672,11 @@ function generateTicket(ventaId) {
             <tbody>
     `;
     
-    currentSale.forEach(item => {
+    ticket.lineas.forEach(item => {
         ticketHTML += `
             <tr>
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
+                <td>${escapeHtml(item.nombre)}</td>
+                <td>${item.cantidad}</td>
                 <td>$${item.subtotal.toFixed(2)}</td>
             </tr>
         `;
@@ -574,17 +688,8 @@ function generateTicket(ventaId) {
         
         <div class="ticket-total">
             <h3>Total: $${total.toFixed(2)}</h3>
-            <p><strong>Método de pago:</strong> ${paymentMethod === 'efectivo' ? 'Efectivo' : 'Transferencia'}</p>
+            <p><strong>Método de pago:</strong> Pendiente de cobro</p>
     `;
-    
-    if (paymentMethod === 'efectivo') {
-        const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
-        const change = cashReceived - total;
-        ticketHTML += `
-            <p><strong>Efectivo recibido:</strong> $${cashReceived.toFixed(2)}</p>
-            <p><strong>Cambio:</strong> $${change.toFixed(2)}</p>
-        `;
-    }
     
     ticketHTML += `
         </div>

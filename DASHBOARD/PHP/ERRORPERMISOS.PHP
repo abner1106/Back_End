@@ -252,11 +252,10 @@ session_start();
 
         <h1 class="error-title">¡Ups! 🐾</h1>
         <p class="error-message">
-            No tienes permisos para acceder a esta área.<br>
-            Solo los administradores pueden gestionar empleados.
+            Tu sesión terminó o no tienes permisos para acceder a esta área.
         </p>
-        <a href="http://localhost/PIZZERIA_MICHES/PHP/LOGIN_AD.PHP" class="login-btn">
-            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión como Admin
+        <a href="../../" class="login-btn">
+            <i class="fas fa-home"></i> Volver a Las Miches
         </a>
     </div>
 

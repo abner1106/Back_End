@@ -1,7 +1,12 @@
 <?php
 session_start();
+
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 if (!isset($_SESSION['empleado_id'])) {
-    header("Location: ../LOGIN/index.php");
+    header("Location: PHP/ERRORPERMISOS.PHP");
     exit;
 }
 ?>
@@ -10,10 +15,12 @@ if (!isset($_SESSION['empleado_id'])) {
 <html lang="es">
 
 <head>
+    <script src="JAVA/SESSION_GUARD.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzería Miches - Ventas</title>
     <link rel="stylesheet" href="CSS/CSS_MENUVENTAS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="IMAGES/CERVEZIN.png" />
@@ -34,18 +41,53 @@ if (!isset($_SESSION['empleado_id'])) {
 
 
 
-        <div style="margin: 20px 0; text-align: center;">
-            <a href="PHP/PASSWORD.PHP" class="btn btn-primary" style="text-decoration: none;">
-                <i class="fas fa-key"></i> Cambiar Mi Contraseña
-            </a>
-        </div>
-
-        <div style="margin: 20px 0; text-align: center;">
-            <a href="HISTORIAL_VENTAS_EMPLEADO.HTML" class="btn btn-primary" style="text-decoration: none;">
-                <i class="fas fa-key"></i> Historial de Ventas
-            </a>
-        </div>
-
+        <nav class="quick-access" aria-label="Accesos rápidos de empleado">
+            <h2>Accesos rápidos</h2>
+            <div class="quick-links">
+                <a class="quick-link" href="PHP/PASSWORD.PHP">
+                    <span class="quick-link-icon" aria-hidden="true"><i class="fas fa-key"></i></span>
+                    <span class="quick-link-copy">
+                        <strong>Cambiar contraseña</strong>
+                        <small>Administra tu acceso</small>
+                    </span>
+                    <i class="fas fa-chevron-right quick-link-arrow" aria-hidden="true"></i>
+                </a>
+                <a class="quick-link" href="HISTORIAL_VENTAS_EMPLEADO.HTML">
+                    <span class="quick-link-icon" aria-hidden="true"><i class="fas fa-receipt"></i></span>
+                    <span class="quick-link-copy">
+                        <strong>Historial de ventas</strong>
+                        <small>Consulta ventas anteriores</small>
+                    </span>
+                    <i class="fas fa-chevron-right quick-link-arrow" aria-hidden="true"></i>
+                </a>
+                <a class="quick-link quick-link-featured" href="ESCALABILIDAD/PEDIDO_DOMICILIO.html">
+                    <span class="quick-link-icon" aria-hidden="true"><i class="fas fa-motorcycle"></i></span>
+                    <span class="quick-link-copy">
+                        <strong>Nuevo pedido a domicilio</strong>
+                        <small>Registra un pedido para entrega</small>
+                    </span>
+                    <i class="fas fa-chevron-right quick-link-arrow" aria-hidden="true"></i>
+                </a>
+                <a class="quick-link quick-link-featured" href="PEDIDOS_DOMICILIO.html">
+                    <span class="quick-link-icon" aria-hidden="true"><i class="fas fa-route"></i></span>
+                    <span class="quick-link-copy">
+                        <strong>Estado de pedidos</strong>
+                        <small>Actualiza entrega y cobro</small>
+                    </span>
+                    <i class="fas fa-chevron-right quick-link-arrow" aria-hidden="true"></i>
+                </a>
+            </div>
+            <form class="logout-form" action="PHP/CERRAR_SESION.php" method="POST"
+                onsubmit="return confirm('¿Quieres cerrar tu sesión?')">
+                <button class="quick-link quick-link-logout" type="submit">
+                    <span class="quick-link-icon" aria-hidden="true"><i class="fas fa-sign-out-alt"></i></span>
+                    <span class="quick-link-copy">
+                        <strong>Cerrar sesión</strong>
+                        <small>Salir de tu cuenta</small>
+                    </span>
+                </button>
+            </form>
+        </nav>
 
         <section class="sales-container">
             <div class="product-selection">

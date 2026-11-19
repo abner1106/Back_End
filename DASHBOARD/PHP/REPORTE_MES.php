@@ -8,10 +8,11 @@ require_once __DIR__ . '/REPORTE_PERIODO_ADAPTER.php';
 
 $logFile = 'errores.log';
 
-function logError($message) {
+function logError($message)
+{
     global $logFile;
     $timestamp = date('[Y-m-d H:i:s]');
-    file_put_contents($logFile, $timestamp." ".$message.PHP_EOL, FILE_APPEND);
+    file_put_contents($logFile, $timestamp . " " . $message . PHP_EOL, FILE_APPEND);
 }
 
 try {
@@ -20,7 +21,7 @@ try {
     }
 
     require_once 'CONEXION.php';
-    
+
     if (!$conn) {
         throw new Exception('Error de conexión a la base de datos', 500);
     }
@@ -36,9 +37,11 @@ try {
     $titulo = $period['titulo'];
 
     // Construir WHERE específicos para cada tabla
-    $whereVentas = sprintf($filtroBase, 'v.fecha');
+    $whereVentas = sprintf($filtroBase, 'v.fecha')
+        . " AND (v.tipo_venta <> 'domicilio' OR v.estado_pedido = 'cobrado')";
     $whereRetiros = sprintf($filtroBase, 'retiros_caja.fecha'); // Cambiado a nombre de tabla en lugar de alias
-    $whereVentasSinAlias = sprintf($filtroBase, 'ventas.fecha');
+    $whereVentasSinAlias = sprintf($filtroBase, 'ventas.fecha')
+        . " AND (ventas.tipo_venta <> 'domicilio' OR ventas.estado_pedido = 'cobrado')";
 
     // Consulta de ventas con detalle
     $queryVentas = "
@@ -59,17 +62,17 @@ try {
         WHERE $whereVentas
         ORDER BY v.fecha DESC
     ";
-    
+
     $stmtVentas = $conn->prepare($queryVentas);
     foreach ($params as $key => $value) {
         $stmtVentas->bindValue($key, $value);
     }
     $stmtVentas->execute();
-    
+
     $ventas = [];
     while ($row = $stmtVentas->fetch(PDO::FETCH_ASSOC)) {
         $ventaId = $row['id_venta'];
-        
+
         if (!isset($ventas[$ventaId])) {
             $ventas[$ventaId] = [
                 'id_venta' => $row['id_venta'],
@@ -80,7 +83,7 @@ try {
                 'productos' => []
             ];
         }
-        
+
         $ventas[$ventaId]['productos'][] = [
             'nombre' => $row['nombre'],
             'precio' => $row['precio'],
@@ -89,7 +92,7 @@ try {
             'observaciones' => $row['observaciones']
         ];
     }
-    
+
     // Consulta de totales de ventas (sin alias en la tabla)
     $queryTotales = "
         SELECT 
@@ -100,14 +103,14 @@ try {
         FROM ventas
         WHERE $whereVentasSinAlias
     ";
-    
+
     $stmtTotales = $conn->prepare($queryTotales);
     foreach ($params as $key => $value) {
         $stmtTotales->bindValue($key, $value);
     }
     $stmtTotales->execute();
     $totales = $stmtTotales->fetch(PDO::FETCH_ASSOC);
-    
+
     // Consulta de retiros (corregido el alias)
     $queryRetiros = "
         SELECT 
@@ -120,14 +123,14 @@ try {
         WHERE $whereRetiros
         ORDER BY fecha DESC
     ";
-    
+
     $stmtRetiros = $conn->prepare($queryRetiros);
     foreach ($params as $key => $value) {
         $stmtRetiros->bindValue($key, $value);
     }
     $stmtRetiros->execute();
     $retiros = $stmtRetiros->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Total de retiros
     $queryTotalRetiros = "SELECT COALESCE(SUM(monto), 0) AS total_retiros FROM retiros_caja WHERE $whereRetiros";
     $stmtTotalRetiros = $conn->prepare($queryTotalRetiros);
@@ -136,10 +139,10 @@ try {
     }
     $stmtTotalRetiros->execute();
     $retirosSum = $stmtTotalRetiros->fetch(PDO::FETCH_ASSOC);
-    
+
     // Calcular efectivo en caja
     $efectivoCaja = ($totales['efectivo'] ?? 0) - ($retirosSum['total_retiros'] ?? 0);
-    
+
     $response = [
         'success' => true,
         'titulo' => $titulo,
@@ -154,12 +157,12 @@ try {
             'total_retiros' => $retirosSum['total_retiros'] ?? 0
         ]
     ];
-    
+
     echo json_encode($response);
-    
+
 } catch (PDOException $e) {
     http_response_code(500);
-    logError("Error PDO: ".$e->getMessage());
+    logError("Error PDO: " . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => 'Error de base de datos',
@@ -168,7 +171,7 @@ try {
 } catch (Exception $e) {
     $statusCode = $e->getCode() ?: 500;
     http_response_code($statusCode);
-    logError("Error: ".$e->getMessage());
+    logError("Error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage(),

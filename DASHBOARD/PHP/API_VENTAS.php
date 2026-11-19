@@ -79,7 +79,8 @@ function handleReportRequest($conn) {
     // Consulta de ventas (igual que antes)
     $queryVentas = "SELECT id_venta, tipo_venta, cliente_nombre, total, fecha, metodo_pago
                    FROM ventas 
-                   WHERE fecha BETWEEN :startDate AND :endDate";
+                   WHERE fecha BETWEEN :startDate AND :endDate
+                     AND (tipo_venta <> 'domicilio' OR estado_pedido = 'cobrado')";
     
     $conditions = [
         ':startDate' => $params['startDate'] . ' 00:00:00',
@@ -120,6 +121,7 @@ function handleReportRequest($conn) {
                       FROM detalle_venta dv
                       JOIN ventas v ON dv.id_venta = v.id_venta
                       WHERE v.fecha BETWEEN :startDate AND :endDate
+                        AND (v.tipo_venta <> 'domicilio' OR v.estado_pedido = 'cobrado')
                       GROUP BY dv.id_producto, dv.nombre_producto
                       ORDER BY vendidos DESC";
 
@@ -162,7 +164,9 @@ function handleSaleDetailsRequest($conn) {
 
     try {
         $stmt = $conn->prepare("SELECT id_venta, tipo_venta, cliente_nombre, total, fecha, metodo_pago
-                              FROM ventas WHERE id_venta = :id");
+                              FROM ventas
+                              WHERE id_venta = :id
+                                AND (tipo_venta <> 'domicilio' OR estado_pedido = 'cobrado')");
         $stmt->execute([':id' => $ventaId]);
         $venta = $stmt->fetch(PDO::FETCH_ASSOC);
         

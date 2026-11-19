@@ -56,6 +56,32 @@ body {
     background-color: var(--white);
 }
 
+.header-account-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.header-account-actions form {
+    margin: 0;
+}
+
+.header-account-actions .btn {
+    width: auto;
+    text-decoration: none;
+}
+
+.header-account-actions .btn-logout {
+    background: linear-gradient(135deg, var(--primary), #f40505);
+    box-shadow: 0 4px 0 var(--danger);
+}
+
+.header-account-actions .btn-logout:hover {
+    background: linear-gradient(135deg, #f40505, var(--accent));
+}
+
 .logo {
     width: 120px;
     height: 120px;

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script src="JAVA/SESSION_GUARD.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de pedidos a domicilio</title>
+    <link rel="stylesheet" href="CSS/PEDIDOS_DOMICILIO.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">Panel de empleados</p>
+            <h1>Pedidos a domicilio</h1>
+        </div>
+        <nav aria-label="Navegación de pedidos">
+            <a class="nav-link" href="ESCALABILIDAD/PEDIDO_DOMICILIO.html">
+                <i class="fas fa-plus"></i> Nuevo pedido
+            </a>
+            <a class="nav-link" href="MENU_VENTAS.html">
+                <i class="fas fa-arrow-left"></i> Ventas
+            </a>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        <section class="intro">
+            <div>
+                <h2>Seguimiento de pedidos</h2>
+                <p>Marca la entrega y el cobro. Los pedidos pendientes se pueden cancelar indicando el motivo.</p>
+            </div>
+            <button id="refresh-orders" class="button button-muted" type="button">
+                <i class="fas fa-rotate"></i> Actualizar
+            </button>
+        </section>
+        <p id="orders-message" class="message" role="status" aria-live="polite">Cargando pedidos...</p>
+        <section id="orders-list" class="orders-grid" aria-label="Lista de pedidos"></section>
+    </main>
+
+    <script src="JAVA/PEDIDOS_DOMICILIO.js"></script>
+</body>
+</html>

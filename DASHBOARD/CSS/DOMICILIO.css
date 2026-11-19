@@ -1,16 +1,17 @@
 :root {
-    --primary: #f857a6;
-    --primary-light: #730abe;
-    --secondary: #1818b1;
-    --dark: #333;
-    --light: #f8f9fa;
-    --success: #28a745;
-    --danger: #dc3545;
-    --warning: #ffc107;
-    --info: #17a2b8;
-    --white: #ffffff;
+    --primary: #A52A2A;
+    --primary-light: #C0392B;
+    --secondary: #f40505;
+    --dark: #2F4F4F;
+    --light: #FAF0E6;
+    --success: #2ECC71;
+    --danger: #C0392B;
+    --warning: #E67E22;
+    --info: #2F4F4F;
+    --white: #FFFFFF;
     --gray: #6c757d;
-    --gray-light: #e9ecef;
+    --gray-light: #F3E7D8;
+    --border: #E5D8CA;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --transition: all 0.3s ease;
     --border-radius: 12px;
@@ -107,6 +108,36 @@ header h1 {
     margin-bottom: 1rem;
 }
 
+.extra-editor .form-row {
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.extra-editor .form-control {
+    flex: 1 1 150px;
+    min-width: 130px;
+}
+
+.extra-editor #add-extra {
+    flex: 0 0 auto;
+}
+
+.pending-extras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: .75rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pending-extras li {
+    padding: .3rem .6rem;
+    border-radius: 999px;
+    background: var(--gray-light);
+    font-size: .9rem;
+}
+
 label {
     display: block;
     margin-bottom: 0.5rem;
@@ -117,7 +148,7 @@ label {
 .form-control {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 1rem;
     transition: var(--transition);
@@ -127,7 +158,7 @@ label {
 .form-control:focus {
     border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(248, 87, 166, 0.2);
+    box-shadow: 0 0 0 3px rgba(165, 42, 42, 0.2);
 }
 
 /* Grupos de checkboxes y radios */
@@ -148,7 +179,7 @@ label {
 }
 
 .checkbox-group label:hover, .radio-group label:hover {
-    background-color: rgba(248, 87, 166, 0.05);
+    background-color: rgba(165, 42, 42, 0.06);
 }
 
 .checkbox-group input[type="checkbox"], 
@@ -191,7 +222,7 @@ label {
 }
 
 .btn-success:hover {
-    background-color: #218838;
+    background-color: #27AE60;
     transform: translateY(-2px);
 }
 
@@ -201,7 +232,7 @@ label {
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+    background-color: #A93226;
     transform: translateY(-2px);
 }
 
@@ -235,7 +266,7 @@ label {
     max-height: 400px;
     overflow-y: auto;
     margin-bottom: 1.5rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
 }
@@ -248,7 +279,7 @@ label {
 .sale-table th, .sale-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border);
 }
 
 .sale-table th {
@@ -259,7 +290,7 @@ label {
 }
 
 .sale-table tr:hover {
-    background-color: rgba(248, 87, 166, 0.05);
+    background-color: rgba(165, 42, 42, 0.06);
 }
 
 .delete-btn {
@@ -359,7 +390,7 @@ label {
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border);
 }
 
 .modal-header h2 {
@@ -388,7 +419,7 @@ label {
     display: flex;
     justify-content: flex-end;
     padding-top: 1.5rem;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--border);
     gap: 0.75rem;
 }
 
@@ -419,6 +450,11 @@ label {
     .form-row {
         flex-direction: column;
         gap: 0.75rem;
+    }
+
+    .extra-editor .form-control,
+    .extra-editor #add-extra {
+        width: 100%;
     }
     
     .checkbox-group, .radio-group {

@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y es admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: ../MENU_VENTAS.html");
+// Verificar si el usuario está logueado y es administrativo
+if (!isset($_SESSION['empleado_id']) || ($_SESSION['empleado_tipo'] ?? null) !== 'administrativo') {
+    header("Location: ../PHP/ERRORPERMISOS.PHP");
     exit();
 }
 

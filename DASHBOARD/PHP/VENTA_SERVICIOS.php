@@ -31,8 +31,9 @@ final class PdoVentaRepository implements VentaRepository
                     total,
                     metodo_pago,
                     concepto,
-                    detalles
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    detalles,
+                    estado_pedido
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmtVenta->execute([
                 $venta['id_empleado'],
@@ -44,6 +45,7 @@ final class PdoVentaRepository implements VentaRepository
                 $venta['metodo_pago'],
                 $venta['concepto'],
                 $venta['detalles'],
+                $venta['tipo_venta'] === 'domicilio' ? 'pendiente' : 'cobrado',
             ]);
 
             $idVenta = $this->connection->lastInsertId();

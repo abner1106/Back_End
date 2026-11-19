@@ -1,0 +1,111 @@
+:root {
+    color-scheme: light;
+    --primary: #A52A2A;
+    --secondary: #f40505;
+    --accent: #FFD700;
+    --dark: #2F4F4F;
+    --light: #FAF0E6;
+    --ink: #333333;
+    --muted: #6c757d;
+    --surface: #FFFFFF;
+    --page: #FAF0E6;
+    --accent-dark: #C0392B;
+    --line: #E5D8CA;
+    --gray-light: #F3E7D8;
+    --green: #2ECC71;
+    --amber: #E67E22;
+    --red: #C0392B;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 16px/1.5 "Segoe UI", Arial, sans-serif;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem max(1.25rem, calc((100% - 1120px) / 2));
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.topbar h1, .intro h2, .order-card h3 { margin: 0; }
+.eyebrow { margin: 0 0 .2rem; color: #FFF8E1; font-size: .82rem; }
+.topbar nav { display: flex; flex-wrap: wrap; gap: .65rem; }
+
+.nav-link, .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 42px;
+    padding: .6rem .9rem;
+    border: 0;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 650;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nav-link { color: white; background: var(--dark); }
+.nav-link:hover { background: #244141; }
+.button:disabled { opacity: .55; cursor: wait; }
+.button-muted { color: var(--dark); background: var(--gray-light); }
+.button-primary { color: white; background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+.button-primary:hover { background: linear-gradient(135deg, var(--secondary), var(--accent)); }
+.button-danger { color: white; background: var(--red); }
+.button-small { min-height: 36px; padding: .45rem .7rem; font-size: .9rem; }
+
+.page-content { width: min(1120px, calc(100% - 2rem)); margin: 2rem auto; }
+.intro { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.intro p { margin: .25rem 0 0; color: var(--muted); }
+.message { min-height: 1.5rem; color: var(--muted); }
+.message.is-error { color: var(--red); }
+
+.orders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem; }
+.order-card {
+    padding: 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 5px 16px rgb(22 26 40 / 5%);
+}
+
+.order-heading { display: flex; justify-content: space-between; gap: .8rem; align-items: flex-start; }
+.order-number { margin: 0 0 .25rem; color: var(--muted); font-size: .88rem; }
+.status {
+    flex: none;
+    padding: .25rem .6rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+.status-pendiente { color: #82500D; background: #FFF2D6; }
+.status-entregado { color: var(--dark); background: #E3ECEA; }
+.status-cobrado { color: #236B42; background: #E4F4E9; }
+.status-cancelado { color: #8D2924; background: #FBE8E5; }
+.order-details { margin: .9rem 0; }
+.order-details p { margin: .35rem 0; overflow-wrap: anywhere; }
+.order-details strong { color: #4a4b56; }
+.order-total { font-size: 1.15rem; font-weight: 750; }
+.cancel-reason { padding: .65rem; border-radius: 8px; background: #FBE8E5; color: #8D2924; }
+.order-actions { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1rem; }
+.payment-choice { display: flex; align-items: center; gap: .45rem; color: var(--muted); font-size: .9rem; }
+.payment-choice select { min-height: 36px; border: 1px solid var(--line); border-radius: 6px; padding: .35rem; font: inherit; }
+.empty-state { grid-column: 1 / -1; padding: 2rem; border: 1px dashed #c9cbd3; border-radius: 12px; color: var(--muted); text-align: center; }
+
+@media (max-width: 640px) {
+    .topbar, .intro { align-items: stretch; flex-direction: column; }
+    .topbar nav { display: grid; grid-template-columns: 1fr 1fr; }
+    .page-content { width: min(100% - 1rem, 1120px); margin: 1rem auto; }
+    .intro .button { width: 100%; }
+}

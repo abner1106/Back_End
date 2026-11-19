@@ -34,6 +34,7 @@ try {
         JOIN detalle_venta dv ON v.id_venta = dv.id_venta
         LEFT JOIN empleados e ON v.id_empleado = e.id_empleado
         WHERE DATE(v.fecha) = :fecha
+          AND (v.tipo_venta <> 'domicilio' OR v.estado_pedido = 'cobrado')
         ORDER BY v.fecha DESC, v.id_venta DESC
     ");
     $stmtVentas->bindParam(':fecha', $fecha);
@@ -91,6 +92,7 @@ try {
             COALESCE(SUM(CASE WHEN metodo_pago = 'transferencia' THEN total ELSE 0 END), 0) AS total_transferencia
         FROM ventas
         WHERE DATE(fecha) = :fecha
+          AND (tipo_venta <> 'domicilio' OR estado_pedido = 'cobrado')
     ");
     $stmtTotales->bindParam(':fecha', $fecha);
     $stmtTotales->execute();

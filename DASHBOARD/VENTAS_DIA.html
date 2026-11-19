@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+    <script src="JAVA/SESSION_GUARD.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Corte de Ventas - Pizzería Napoli</title>
@@ -10,20 +11,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
-<!-- Botón para cambiar contraseña -->
-<div style="margin: 20px 0; text-align: center;">
-    <a href="PHP/PASSWORD.PHP" class="btn btn-primary" style="text-decoration: none;">
-        <i class="fas fa-key"></i> Cambiar Mi Contraseña
-    </a>
-</div>
-
-
 <body>
     <div class="container">
         <header class="header">
             <img src="IMAGES/CERVEZIN.png" alt="Logo Pizzería" class="logo" />
             <h1>Corte de Ventas</h1>
             <div class="fecha-hora" id="fecha-hora"></div>
+            <div class="header-account-actions">
+                <a href="PHP/PASSWORD.PHP" class="btn btn-primary">
+                    <i class="fas fa-key"></i> Cambiar mi contraseña
+                </a>
+                <form action="PHP/CERRAR_SESION.php" method="POST"
+                    onsubmit="return confirm('¿Quieres cerrar tu sesión?')">
+                    <button type="submit" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </button>
+                </form>
+            </div>
         </header>
         <div class="bienvenida-admin" id="bienvenida-admin"></div>
 
