@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <script src="../JAVA/SESSION_GUARD.js"></script>
     <meta charset="UTF-8">
@@ -7,16 +8,19 @@
     <title>Sistema de Pedidos - Pizzería</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../CSS/DOMICILIO.css">
-    <link rel="icon" type="image/x-icon" href="../IMAGES/LOGOC.PNG"/>
+    <link rel="icon" type="image/x-icon" href="../IMAGES/LOGOC.PNG" />
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1><i class="fas fa-phone-alt"></i> Pedidos por Llamada</h1>
             <div class="header-controls">
-                <a class="btn btn-primary" href="../PEDIDOS_DOMICILIO.html"><i class="fas fa-route"></i> Estado de pedidos</a>
+                <a class="btn btn-primary" href="../PEDIDOS_DOMICILIO.html"><i class="fas fa-route"></i> Estado de
+                    pedidos</a>
                 <button id="clear-sale" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Limpiar</button>
-                <button id="complete-sale" class="btn btn-success"><i class="fas fa-check-circle"></i> Realizar Venta</button>
+                <button id="complete-sale" class="btn btn-success"><i class="fas fa-check-circle"></i> Realizar
+                    Venta</button>
             </div>
         </header>
 
@@ -29,7 +33,8 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="cliente_nombre">Nombre del Cliente:</label>
-                            <input type="text" id="cliente_nombre" class="form-control" placeholder="Nombre del cliente">
+                            <input type="text" id="cliente_nombre" class="form-control"
+                                placeholder="Nombre del cliente">
                         </div>
                         <div class="form-group">
                             <label for="telefono-cliente">Teléfono:</label>
@@ -37,7 +42,8 @@
                         </div>
                         <div class="form-group">
                             <label for="direccion-cliente">Dirección:</label>
-                            <textarea id="direccion-cliente" class="form-control" rows="2" placeholder="Dirección de entrega"></textarea>
+                            <textarea id="direccion-cliente" class="form-control" rows="2"
+                                placeholder="Dirección de entrega"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="category">Categoría:</label>
@@ -69,28 +75,39 @@
                             </div>
                             <div class="form-group">
                                 <label for="special-price">Precio especial:</label>
-                                <input type="number" id="special-price" class="form-control" min="0" step="0.01" placeholder="Opcional">
+                                <input type="number" id="special-price" class="form-control" min="0" step="0.01"
+                                    placeholder="Opcional">
                             </div>
                         </div>
                         <div id="specialty-group" class="form-group" style="display: none;">
                             <label>Especialidades:</label>
                             <div class="checkbox-group">
-                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Mexicana" data-price="20"> Mexicana (+$20)</label>
-                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Hawaiana" data-price="15"> Hawaiana (+$15)</label>
-                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Cuatro Quesos" data-price="25"> 4 Quesos (+$25)</label>
-                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Pepperoni" data-price="10"> Pepperoni (+$10)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Mexicana"
+                                        data-price="20"> Mexicana (+$20)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Hawaiana"
+                                        data-price="15"> Hawaiana (+$15)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Cuatro Quesos"
+                                        data-price="25"> 4 Quesos (+$25)</label>
+                                <label><input type="checkbox" class="specialty-checkbox" value="Pizza Pepperoni"
+                                        data-price="10"> Pepperoni (+$10)</label>
                             </div>
                             <small id="specialties-help" class="form-text text-muted"></small>
                         </div>
                         <div id="ingredient-group" class="form-group" style="display: none;">
                             <label>Ingredientes extra:</label>
                             <div class="checkbox-group">
-                                <label><input type="checkbox" class="ingredient-checkbox" value="pepperoni" data-price="15"> Pepperoni (+$15)</label>
-                                <label><input type="checkbox" class="ingredient-checkbox" value="jamon" data-price="12"> Jamón (+$12)</label>
-                                <label><input type="checkbox" class="ingredient-checkbox" value="champiñones" data-price="10"> Champiñones (+$10)</label>
-                                <label><input type="checkbox" class="ingredient-checkbox" value="pimientos" data-price="8"> Pimientos (+$8)</label>
-                                <label><input type="checkbox" class="ingredient-checkbox" value="cebolla" data-price="8"> Cebolla (+$8)</label>
-                                <label><input type="checkbox" class="ingredient-checkbox" value="aceitunas" data-price="10"> Aceitunas (+$10)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="pepperoni"
+                                        data-price="15"> Pepperoni (+$15)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="jamon" data-price="12">
+                                    Jamón (+$12)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="champiñones"
+                                        data-price="10"> Champiñones (+$10)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="pimientos"
+                                        data-price="8"> Pimientos (+$8)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="cebolla"
+                                        data-price="8"> Cebolla (+$8)</label>
+                                <label><input type="checkbox" class="ingredient-checkbox" value="aceitunas"
+                                        data-price="10"> Aceitunas (+$10)</label>
                             </div>
                             <small id="ingredients-help" class="form-text text-muted"></small>
                         </div>
@@ -98,7 +115,8 @@
                             <label for="extra-catalog">Agregar extra al producto:</label>
                             <div class="form-row">
                                 <input id="extra-custom-name" class="form-control" type="text"
-                                    placeholder="Otro extra (ej. más alcohol)" aria-label="Nombre del extra personalizado">
+                                    placeholder="Otro extra (ej. más alcohol)"
+                                    aria-label="Nombre del extra personalizado">
                                 <select id="extra-catalog" class="form-control">
                                     <option value="pepperoni" data-price="15">Pepperoni ($15)</option>
                                     <option value="jamon" data-price="12">Jamón ($12)</option>
@@ -107,7 +125,8 @@
                                     <option value="cebolla" data-price="8">Cebolla ($8)</option>
                                     <option value="aceitunas" data-price="10">Aceitunas ($10)</option>
                                 </select>
-                                <select id="extra-pricing" class="form-control" aria-label="Estrategia de precio del extra">
+                                <select id="extra-pricing" class="form-control"
+                                    aria-label="Estrategia de precio del extra">
                                     <option value="standard">Precio estándar</option>
                                     <option value="employee">Precio definido por empleado</option>
                                 </select>
@@ -119,9 +138,11 @@
                         </div>
                         <div class="form-group">
                             <label for="special-requests">Notas especiales:</label>
-                            <textarea id="special-requests" class="form-control" rows="2" placeholder="Ej: Sin cebolla, bien cocida, etc."></textarea>
+                            <textarea id="special-requests" class="form-control" rows="2"
+                                placeholder="Ej: Sin cebolla, bien cocida, etc."></textarea>
                         </div>
-                        <button id="add-product" class="btn btn-primary" disabled><i class="fas fa-plus-circle"></i> Agregar Producto</button>
+                        <button id="add-product" class="btn btn-primary" disabled><i class="fas fa-plus-circle"></i>
+                            Agregar Producto</button>
                     </div>
                 </div>
             </div>
@@ -140,7 +161,7 @@
                             <table class="sale-table">
                                 <thead>
                                     <tr>
-                                       <th>Telefono</th>
+                                        <th>Telefono</th>
                                         <th>Producto</th>
                                         <th>Cant.</th>
                                         <th>Precio</th>
@@ -184,4 +205,5 @@
     <script src="../JAVA/PEDIDO_DOMICILIO_PATRONES.js"></script>
     <script src="DOMICILIO.js"></script>
 </body>
+
 </html>
