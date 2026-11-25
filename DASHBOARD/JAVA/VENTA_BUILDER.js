@@ -109,3 +109,5 @@
     window.SaleItemPrototype = SaleItemPrototype;
     window.VentaBuilder = VentaBuilder;
 })();
+
+

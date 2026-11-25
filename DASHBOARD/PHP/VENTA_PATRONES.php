@@ -61,6 +61,118 @@ final class ProductoVentaLocalFactory extends ProductoVentaFactory
     }
 }
 
+abstract class VentaValidationHandler
+{
+    private ?VentaValidationHandler $nextHandler = null;
+
+    public function setNext(VentaValidationHandler $handler): VentaValidationHandler
+    {
+        $this->nextHandler = $handler;
+        return $handler;
+    }
+
+    final public function handle(array &$venta): void
+    {
+        $this->validate($venta);
+        if ($this->nextHandler !== null) {
+            $this->nextHandler->handle($venta);
+        }
+    }
+
+    abstract protected function validate(array &$venta): void;
+}
+
+final class EmpleadoVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        $idEmpleado = filter_var($venta['id_empleado'] ?? null, FILTER_VALIDATE_INT);
+        if ($idEmpleado === false || $idEmpleado <= 0) {
+            throw new InvalidArgumentException('Se requiere un identificador de empleado válido.');
+        }
+    }
+}
+
+final class TotalVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        $total = $venta['total'] ?? null;
+        if (!is_numeric($total) || !is_finite((float) $total) || (float) $total < 0) {
+            throw new InvalidArgumentException('Se requiere un total válido.');
+        }
+    }
+}
+
+final class TipoVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        $tipoVenta = $venta['tipo_venta'] ?? 'local';
+        if (!is_string($tipoVenta) || !in_array($tipoVenta, ['local', 'domicilio'], true)) {
+            throw new InvalidArgumentException('El tipo de venta no es válido.');
+        }
+    }
+}
+
+final class MetodoPagoVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        $metodoPago = $venta['metodo_pago'] ?? '';
+        if (!is_string($metodoPago) || !in_array($metodoPago, ['efectivo', 'transferencia'], true)) {
+            throw new InvalidArgumentException('El método de pago no es válido.');
+        }
+    }
+}
+
+final class ClienteVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        if (
+            !is_string($venta['cliente_nombre'] ?? null)
+            || trim($venta['cliente_nombre']) === ''
+        ) {
+            throw new InvalidArgumentException('Se requiere el nombre del cliente.');
+        }
+    }
+}
+
+final class TextoOpcionalVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        foreach (['direccion', 'telefono', 'concepto', 'detalles'] as $optionalText) {
+            if (isset($venta[$optionalText]) && !is_string($venta[$optionalText])) {
+                throw new InvalidArgumentException("El campo $optionalText debe ser texto.");
+            }
+        }
+    }
+}
+
+final class ProductosVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        if ($venta['productos'] === []) {
+            throw new InvalidArgumentException('La venta debe incluir al menos un producto.');
+        }
+    }
+}
+
+final class NormalizarVentaValidationHandler extends VentaValidationHandler
+{
+    protected function validate(array &$venta): void
+    {
+        $venta['id_empleado'] = filter_var($venta['id_empleado'], FILTER_VALIDATE_INT);
+        $venta['cliente_nombre'] = trim($venta['cliente_nombre']);
+        $venta['total'] = (float) $venta['total'];
+        $venta['tipo_venta'] = $venta['tipo_venta'] ?? 'local';
+        $venta['metodo_pago'] = $venta['metodo_pago'] ?? '';
+    }
+}
+
 final class VentaBuilder
 {
     // Chiquilín: Builder permite completar el pedido paso a paso y concentrar
@@ -114,46 +226,19 @@ final class VentaBuilder
 
     public function build(): array
     {
-        $idEmpleado = filter_var($this->venta['id_empleado'] ?? null, FILTER_VALIDATE_INT);
-        $total = $this->venta['total'] ?? null;
-        $tipoVenta = $this->venta['tipo_venta'] ?? 'local';
-        $metodoPago = $this->venta['metodo_pago'] ?? '';
+        // Chiquilín: Chain of Responsibility valida en DASHBOARD/PHP/VENTA_PATRONES.php;
+        // cada handler revisa una regla y delega al siguiente para aislar las validaciones.
+        $validationChain = new EmpleadoVentaValidationHandler();
+        $validationChain
+            ->setNext(new TotalVentaValidationHandler())
+            ->setNext(new TipoVentaValidationHandler())
+            ->setNext(new MetodoPagoVentaValidationHandler())
+            ->setNext(new ClienteVentaValidationHandler())
+            ->setNext(new TextoOpcionalVentaValidationHandler())
+            ->setNext(new ProductosVentaValidationHandler())
+            ->setNext(new NormalizarVentaValidationHandler());
 
-        if ($idEmpleado === false || $idEmpleado <= 0) {
-            throw new InvalidArgumentException('Se requiere un identificador de empleado válido.');
-        }
-        if (!is_numeric($total) || !is_finite((float) $total) || (float) $total < 0) {
-            throw new InvalidArgumentException('Se requiere un total válido.');
-        }
-        if (!is_string($tipoVenta) || !in_array($tipoVenta, ['local', 'domicilio'], true)) {
-            throw new InvalidArgumentException('El tipo de venta no es válido.');
-        }
-        if (!is_string($metodoPago) || !in_array($metodoPago, ['efectivo', 'transferencia'], true)) {
-            throw new InvalidArgumentException('El método de pago no es válido.');
-        }
-        if (
-            !is_string($this->venta['cliente_nombre'] ?? null)
-            || trim($this->venta['cliente_nombre']) === ''
-        ) {
-            throw new InvalidArgumentException('Se requiere el nombre del cliente.');
-        }
-        foreach (['direccion', 'telefono', 'concepto', 'detalles'] as $optionalText) {
-            if (
-                isset($this->venta[$optionalText])
-                && !is_string($this->venta[$optionalText])
-            ) {
-                throw new InvalidArgumentException("El campo $optionalText debe ser texto.");
-            }
-        }
-        if ($this->venta['productos'] === []) {
-            throw new InvalidArgumentException('La venta debe incluir al menos un producto.');
-        }
-
-        $this->venta['id_empleado'] = $idEmpleado;
-        $this->venta['cliente_nombre'] = trim($this->venta['cliente_nombre']);
-        $this->venta['total'] = (float) $total;
-        $this->venta['tipo_venta'] = $tipoVenta;
-        $this->venta['metodo_pago'] = $metodoPago;
+        $validationChain->handle($this->venta);
 
         return $this->venta;
     }

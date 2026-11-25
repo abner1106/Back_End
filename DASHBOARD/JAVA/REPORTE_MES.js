@@ -1,3 +1,32 @@
+let ultimoReporte = null;
+let ultimoTituloReporte = '';
+let ultimoTipoReporte = 'dia';
+
+// Bridge: el reporte delega su presentación a un renderer intercambiable,
+// separando los datos y el tipo de reporte de la salida en pantalla o impresión.
+class SalesReport {
+    constructor(type, renderer) {
+        this.type = type;
+        this.renderer = renderer;
+    }
+
+    render(data, title) {
+        return this.renderer.render({ type: this.type, data, title });
+    }
+}
+
+class DashboardReportRenderer {
+    render(report) {
+        actualizarVista(report.data, report.title);
+    }
+}
+
+class BrowserPrintReportRenderer {
+    render(report) {
+        imprimirReporte(report);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Configuración inicial
     actualizarFechaHora();
@@ -143,8 +172,12 @@ async function generarReporte() {
             throw new Error(data?.message || 'Respuesta inválida del servidor');
         }
 
-        // Procesar datos exitosos
-        actualizarVista(data, titulo);
+        // Bridge: el reporte conserva su tipo y delega su presentación al renderer
+        // de pantalla; otro renderer puede imprimir los mismos datos sin cambiarlo.
+        ultimoReporte = data;
+        ultimoTituloReporte = titulo;
+        ultimoTipoReporte = tipo;
+        new SalesReport(tipo, new DashboardReportRenderer()).render(data, titulo);
         mostrarNotificacion('Datos cargados correctamente', 'success');
 
     } catch (error) {
@@ -204,6 +237,121 @@ function actualizarResumenVentas(totales) {
     }
 }
 
+// Iterator: esta colección permite recorrer secuencialmente los datos del reporte.
+class ReportItemIterator {
+    constructor(items) {
+        this.items = items;
+        this.index = 0;
+    }
+
+    next() {
+        if (this.index >= this.items.length) {
+            return { done: true, value: undefined };
+        }
+        return { done: false, value: this.items[this.index++] };
+    }
+}
+
+class ReportItemCollection {
+    constructor(items) {
+        if (!Array.isArray(items)) {
+            throw new TypeError('Los elementos del reporte deben ser una lista.');
+        }
+        this.items = items;
+    }
+
+    [Symbol.iterator]() {
+        return new ReportItemIterator(this.items);
+    }
+}
+
+// Visitor: cada elemento acepta una operación externa para crear su fila sin
+// mezclar la presentación con la estructura de ventas o retiros.
+class SaleProductReportElement {
+    constructor(sale, product, firstProduct) {
+        this.sale = sale;
+        this.product = product;
+        this.firstProduct = firstProduct;
+    }
+
+    accept(visitor, tbody) {
+        visitor.visitSaleProduct(this, tbody);
+    }
+}
+
+class WithdrawalReportElement {
+    constructor(withdrawal) {
+        this.withdrawal = withdrawal;
+    }
+
+    accept(visitor, tbody) {
+        visitor.visitWithdrawal(this, tbody);
+    }
+}
+
+class ReportTableVisitor {
+    visitSaleProduct(element, tbody) {
+        const { sale, product, firstProduct } = element;
+        const row = document.createElement('tr');
+        row.style.animation = 'fadeIn 0.3s ease-out';
+
+        const time = new Date(sale.fecha_hora).toLocaleTimeString('es-MX', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        this.appendCell(row, firstProduct ? time : '');
+
+        const productCell = document.createElement('td');
+        productCell.textContent = String(product.nombre ?? '');
+        for (const detail of [product.observaciones, product.especialidades]) {
+            if (detail) {
+                const line = document.createElement('small');
+                line.className = 'text-muted';
+                line.textContent = String(detail);
+                productCell.append(document.createElement('br'), line);
+            }
+        }
+        row.appendChild(productCell);
+
+        this.appendCell(row, product.cantidad);
+        this.appendCell(row, formatearMoneda(product.precio));
+        this.appendCell(row, formatearMoneda(product.precio * product.cantidad));
+
+        const payment = sale.metodo_pago || 'efectivo';
+        this.appendCell(
+            row,
+            firstProduct ? payment.charAt(0).toUpperCase() + payment.slice(1) : ''
+        );
+        tbody.appendChild(row);
+    }
+
+    visitWithdrawal(element, tbody) {
+        const { withdrawal } = element;
+        const row = document.createElement('tr');
+        row.style.animation = 'fadeIn 0.3s ease-out';
+
+        this.appendCell(row, new Date(withdrawal.fecha).toLocaleString('es-MX', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }));
+        this.appendCell(
+            row,
+            `${withdrawal.motivo}${withdrawal.empleado ? ` (${withdrawal.empleado})` : ''}`
+        );
+        this.appendCell(row, formatearMoneda(withdrawal.monto));
+        tbody.appendChild(row);
+    }
+
+    appendCell(row, value) {
+        const cell = document.createElement('td');
+        cell.textContent = String(value ?? '');
+        row.appendChild(cell);
+    }
+}
+
 function actualizarTablaVentas(ventas) {
     const tbody = document.querySelector('#tabla-ventas tbody');
     if (!tbody) return;
@@ -219,46 +367,22 @@ function actualizarTablaVentas(ventas) {
         return;
     }
 
-    // Ordenar ventas por fecha (más reciente primero)
-    ventas.sort((a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora));
+    // Iterator recorre las ventas y sus productos sin depender de forEach/map.
+    // Visitor crea cada fila según sea producto de venta o retiro.
+    const visitor = new ReportTableVisitor();
+    const orderedSales = [...ventas].sort(
+        (a, b) => new Date(b.fecha_hora) - new Date(a.fecha_hora)
+    );
+    for (const sale of new ReportItemCollection(orderedSales)) {
+        if (!sale.productos || sale.productos.length === 0) continue;
 
-    ventas.forEach(venta => {
-        if (!venta.productos || venta.productos.length === 0) return;
-
-        const fechaHora = new Date(venta.fecha_hora);
-        const hora = fechaHora.toLocaleTimeString('es-MX', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        venta.productos.forEach((producto, index) => {
-            const tr = document.createElement('tr');
-            tr.style.animation = 'fadeIn 0.3s ease-out';
-
-            // Solo mostrar hora en la primera fila
-            const horaCelda = index === 0 ? hora : '';
-
-            // Mostrar método de pago solo en la primera fila
-            const metodoPago = index === 0
-                ? (venta.metodo_pago || 'efectivo').charAt(0).toUpperCase() + (venta.metodo_pago || 'efectivo').slice(1)
-                : '';
-
-            tr.innerHTML = `
-                <td>${horaCelda}</td>
-                <td>
-                    ${producto.nombre}
-                    ${producto.observaciones ? '<br><small class="text-muted">' + producto.observaciones + '</small>' : ''}
-                    ${producto.especialidades ? '<br><small class="text-muted">' + producto.especialidades + '</small>' : ''}
-                </td>
-                <td>${producto.cantidad}</td>
-                <td>${formatearMoneda(producto.precio)}</td>
-                <td>${formatearMoneda(producto.precio * producto.cantidad)}</td>
-                <td>${metodoPago}</td>
-            `;
-
-            tbody.appendChild(tr);
-        });
-    });
+        let productIndex = 0;
+        for (const product of new ReportItemCollection(sale.productos)) {
+            new SaleProductReportElement(sale, product, productIndex === 0)
+                .accept(visitor, tbody);
+            productIndex++;
+        }
+    }
 }
 
 function actualizarTablaRetiros(retiros) {
@@ -276,29 +400,21 @@ function actualizarTablaRetiros(retiros) {
         return;
     }
 
-    retiros.forEach(retiro => {
-        const tr = document.createElement('tr');
-        tr.style.animation = 'fadeIn 0.3s ease-out';
-
-        const fechaHora = new Date(retiro.fecha).toLocaleString('es-MX', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        tr.innerHTML = `
-            <td>${fechaHora}</td>
-            <td>${retiro.motivo}${retiro.empleado ? ' (' + retiro.empleado + ')' : ''}</td>
-            <td>${formatearMoneda(retiro.monto)}</td>
-        `;
-
-        tbody.appendChild(tr);
-    });
+    const visitor = new ReportTableVisitor();
+    // El mismo iterador entrega cada retiro al visitante correspondiente.
+    for (const withdrawal of new ReportItemCollection(retiros)) {
+        new WithdrawalReportElement(withdrawal).accept(visitor, tbody);
+    }
 }
 
 function generarPDF() {
+    new SalesReport(
+        ultimoTipoReporte,
+        new BrowserPrintReportRenderer()
+    ).render(ultimoReporte, ultimoTituloReporte);
+}
+
+function imprimirReporte(report) {
     // Mostrar loader
     const btnPDF = document.getElementById('imprimir-pdf');
     const originalContent = btnPDF.innerHTML;
@@ -311,6 +427,10 @@ function generarPDF() {
 
     // Clonar el contenedor principal
     const mainContent = document.querySelector('.container').cloneNode(true);
+    const heading = mainContent.querySelector('.header h1');
+    if (heading && report.title) {
+        heading.textContent = report.title;
+    }
 
     // Ocultar elementos que no queremos en el PDF
     const elementsToHide = mainContent.querySelectorAll('.no-print, button, .filtro-group, #generar-reporte, #imprimir-pdf');

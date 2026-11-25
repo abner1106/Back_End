@@ -13,6 +13,7 @@
         }
 
         notificar(pedidos) {
+            // El sujeto publica la lista sin conocer cómo cada observador la presenta.
             subscribers.forEach(observer => observer.actualizar(pedidos));
         }
     }
@@ -23,9 +24,10 @@
         }
     }
 
-    // Chiquilín, Observer centraliza el redibujado cuando llegan pedidos nuevos
-    // o cambia un estado; evita repetir renderizado en cada botón o respuesta.
-    // La consulta periódica sincroniza otras sesiones sin recargar la página.
+    // Chiquilín: Observer se aplica a la lista de pedidos. PedidoSubject es el sujeto
+    // y PedidoListObserver el observador: al notificarse una lista, este redibuja la UI.
+    // Así la carga de datos no depende del renderizado y se sincronizan cambios de otras
+    // sesiones mediante consultas periódicas, sin recargar la página.
     const pedidos = new PedidoSubject();
     pedidos.suscribir(new PedidoListObserver());
 
@@ -68,6 +70,7 @@
             if (!response.ok || data.success !== true) {
                 throw new Error(data.message || 'No se pudieron cargar los pedidos.');
             }
+            // Cada carga publica el estado más reciente; los observadores actualizan su vista.
             pedidos.notificar(data.pedidos);
             setMessage(data.pedidos.length ? `Pedidos: ${data.pedidos.length}` : 'No hay pedidos a domicilio.');
         } catch (error) {

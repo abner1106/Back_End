@@ -7,7 +7,7 @@
         }
     }
 
-    // Chiquilín, Strategy intercambia precio de catálogo y precio manual sin
+    // Strategy intercambia precio de catálogo y precio manual sin
     // meter condicionales de precio en cada cálculo; agregar otra regla requiere
     // otra estrategia, no modificar el cálculo del pedido.
     class PrecioEmpleadoStrategy {

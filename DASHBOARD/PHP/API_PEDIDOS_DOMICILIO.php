@@ -50,7 +50,7 @@ try {
         if ($motivo === '') {
             responder(400, ['success' => false, 'message' => 'Escribe el motivo de cancelación.']);
         }
-
+        // encapsula la cancelacion como una operacion completa explica quien la hizo y el motivo de la cancelacion
         (new ComandoCancelarPedido(
             $conn,
             $idVenta,
@@ -62,9 +62,11 @@ try {
     }
 
     $metodoPago = $datos['metodo_pago'] ?? null;
-    if ($estadoSolicitado === 'cobrado'
+    if (
+        $estadoSolicitado === 'cobrado'
         && (!is_string($metodoPago)
-            || !in_array($metodoPago, ['efectivo', 'tarjeta', 'transferencia'], true))) {
+            || !in_array($metodoPago, ['efectivo', 'tarjeta', 'transferencia'], true))
+    ) {
         responder(400, ['success' => false, 'message' => 'Selecciona un método de pago válido.']);
     }
 
@@ -78,7 +80,7 @@ try {
     if ($estadoActual === false) {
         throw new OutOfBoundsException('No se encontró el pedido a domicilio.');
     }
-
+//pedido estado
     $nuevoEstado = (new PedidoStateMachine())->transicionar(
         (string) $estadoActual,
         $estadoSolicitado

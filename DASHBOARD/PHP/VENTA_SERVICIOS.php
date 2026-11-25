@@ -162,6 +162,8 @@ final class VentaRegistrationFacade
             $builder->addProducto($producto, $this->productoFactory);
         }
 
+        // Chain of Responsibility corre al construir: la fachada delega la validación
+        // al Builder sin acoplarse a cada regla individual.
         $venta = $builder->build();
 
         return [
